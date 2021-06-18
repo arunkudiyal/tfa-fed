@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <!-- Metadata of the document -->
     <head>
         <title>My document!</title>
     </head>
@@ -50,7 +51,123 @@
 
         <hr>
 
-        <div style="height: 500px;"></div>
+        <h3>Lists : </h3>
+
+        <!-- Un-ordered List OR Ordered-List -->
+        <i>Steps to make a good tea : </i> <br>
+        <ol type="i">
+            <li>Take sufficient amunt of water.</li>
+            <li>Put sufficient amount of tea.</li>
+            <li>Add sufficient amount of sugar.</li>
+            <li>Add sufficient amount of milk.</li>
+            <li>Make it boil for 5-7 good minutes</li>
+        </ol>
+
+        <i>Things to buy from the supermarket : </i>
+        <ul>
+            <li>Fruits</li>
+            <li>Vegetables</li>
+            <li>Dry Fruits</li>
+            <li>Notebooks</li>
+            <li>Dog Food</li>
+        </ul>
+
+        <hr>
+
+        <h3>HTML Forms : </h3> 
+
+        <!-- Divisions <div>  -->
+
+        <form action="some-back-end.js">
+            <div>
+                <label for="fName">First Name :  </label>
+                <input type="text" />
+            </div> <br>
+
+            <div>
+                <label for="lName">Last Name :  </label>
+                <input type="text" />
+            </div> <br>
+
+            <!-- username@hostname.com -->
+            <div>
+                <label for="email">E-Mail : </label>
+                <input type="email" />
+            </div> <br>
+
+            <div>
+                <label for="password">Password : </label>
+                <input type="password">
+            </div> <br>
+
+            <div>
+                <label for="feedback">Feedback : </label>
+                <textarea></textarea>
+            </div> <br>
+
+            <input type="range"> <br> <br>
+            <input type="date"> <br> <br>
+            <div>
+                <label for="file">Select a file : </label>
+                <input type="file">
+            </div> <br>
+
+            <!-- <input type="button" value="Sign-Up"> -->
+            <input type="submit" value="SUBMIT">
+        </form>
+
+        <hr>
+
+        <h3>Tables : </h3>
+
+        <table>
+
+            <thead>
+                <th>Emp. Name</th>
+                <th>Emp. Email</th>
+                <th>Emp. Age</th>
+                <th>Emp. designation</th>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Tim Cook</td>
+                    <td>time.cook@apple.com</td>
+                    <td>60</td>
+                    <td>CEO</td>
+                </tr>
+
+                <tr>
+                    <td>Creg</td>
+                    <td>creg.b@apple.com</td>
+                    <td>55</td>
+                    <td>President - SDE</td>
+                </tr>
+
+                <tr>
+                    <td>Jogn Ives</td>
+                    <td>john.ives@apple.com</td>
+                    <td>45</td>
+                    <td>President - UI</td>
+                </tr>
+
+                <tr>
+                    <td>John Adams</td>
+                    <td>john.adams@apple.com</td>
+                    <td>30</td>
+                    <td>Product Manager</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+        <h3>Videos : </h3>
+        <video src="/videos/Vid - 1.mp4" controls width="60%" poster="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png"></video>
+        <hr>
+
+        <h3>YouTube Video : </h3>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/VkmXX_jKmZw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <hr>
 
     </body>
 </html>
