@@ -5,3 +5,33 @@ h1 {
 .subtitle {
     color: green
 }
+
+/* PSEUDO SELECTORS */
+
+h2:hover {
+    color: red;
+}
+
+.un-order:first-child {
+    color: yellow;
+}
+
+.un-order:last-child {
+    color: green;
+}
+
+.un-order:nth-child(3) {
+    color: grey;
+}
+
+#google-link:link {
+    color:grey
+}
+
+#google-link:visited {
+    color: burlywood;
+}
+
+#google-link:hover {
+    background: crimson;
+}
