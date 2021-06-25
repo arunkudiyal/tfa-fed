@@ -2,7 +2,7 @@
     property: value
 } */
 body {
-    background: rgb(123, 168, 232);
+    background: linear-gradient(to bottom, rgba(123, 168, 232, 1), rgba(123, 168, 232, 0.3));
 }
 
 h1 {
@@ -76,7 +76,7 @@ $ -> Ends With
 /* COLORS */
 /* color -> name, ID, rgb() */
 
-.container {
+.container-one {
     height: 400px;
     width: 70%;
 
@@ -84,4 +84,21 @@ $ -> Ends With
     background-repeat: no-repeat;
     background-size: cover;
     background-color: rgb(57, 55, 92);
+}
+
+/* GRADIENTS */
+
+.container-two {
+    height: 400px;
+    width:70%;
+
+   /* background: linear-gradient(to right, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4)); */
+   background: linear-gradient(90deg, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4), blue);
+}
+
+.container-three {
+    height: 400px;
+    width: 70%;
+
+    background: radial-gradient(red 40%, blue 55%, green 70%);
 }
