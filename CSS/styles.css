@@ -1,5 +1,13 @@
+/* selector {
+    property: value
+} */
+
 h1 {
     color: blue;
+}
+
+#heading {
+    background: cadetblue;
 }
 
 .subtitle {
@@ -35,3 +43,28 @@ h2:hover {
 #google-link:hover {
     background: crimson;
 }
+
+/* Attribute Selectors */
+/* element[attribute:value] {
+
+} */
+
+h2[class=subtitle] {
+    background: yellow;
+}
+
+/* ^ -> Starts with
+$ -> Ends With
+* -> Contains */
+
+/* img[src$="./img/"] {
+    border: 10px solid black;
+} */
+
+/* img[src$=".jpeg"] {
+    border: 10px solid black;
+} */
+
+/* img[src*="img-2"] {
+    border: 10px solid black;
+} */
