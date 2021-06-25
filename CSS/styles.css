@@ -1,6 +1,9 @@
 /* selector {
     property: value
 } */
+body {
+    background: rgb(123, 168, 232);
+}
 
 h1 {
     color: blue;
@@ -68,3 +71,17 @@ $ -> Ends With
 /* img[src*="img-2"] {
     border: 10px solid black;
 } */
+
+
+/* COLORS */
+/* color -> name, ID, rgb() */
+
+.container {
+    height: 400px;
+    width: 70%;
+
+    background: url("https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgb(57, 55, 92);
+}
