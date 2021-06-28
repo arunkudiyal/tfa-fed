@@ -3,10 +3,21 @@
 } */
 body {
     background: linear-gradient(to bottom, rgba(123, 168, 232, 1), rgba(123, 168, 232, 0.3));
+    /* font-size: 1mm; */
+    /* font-size: 20px; */
+    font-size: 1.1em;
+    color: rgb(43, 46, 44);
+
+    text-transform: none;
+    text-align: justify;
+
+    font-family: 'Quicksand', sans-serif;
 }
 
 h1 {
-    color: blue;
+    color: black;
+    text-align: center;
+    font-family: 'Noto Sans SC', sans-serif;
 }
 
 #heading {
@@ -35,12 +46,17 @@ h2:hover {
     color: grey;
 }
 
-#google-link:link {
-    color:grey
+/* #google-link:link {
+    color: grey
 }
 
 #google-link:visited {
     color: burlywood;
+} */
+
+#google-link {
+    text-decoration: none;
+    /* color: black; */
 }
 
 #google-link:hover {
@@ -77,7 +93,7 @@ $ -> Ends With
 /* color -> name, ID, rgb() */
 
 .container-one {
-    height: 400px;
+    height: 40%;
     width: 70%;
 
     background: url("https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80");
@@ -90,15 +106,22 @@ $ -> Ends With
 
 .container-two {
     height: 400px;
-    width:70%;
+    width: 70%;
 
-   /* background: linear-gradient(to right, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4)); */
-   background: linear-gradient(90deg, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4), blue);
+    /* background: linear-gradient(to right, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4)); */
+    background: linear-gradient(90deg, rgba(68, 130, 81, 1), rgba(68, 130, 81, 0.4), blue);
 }
 
 .container-three {
     height: 400px;
     width: 70%;
 
-    background: radial-gradient(red 40%, blue 55%, green 70%);
+    background: radial-gradient(circle, red 40%, blue 55%, green 70%);
 }
+
+/* UNITS OF MEASUREMNETS */
+
+/* cm, mm, in, px, em, rem, vh, vw, % */
+
+/* TEXTS AND FONTS */
+
