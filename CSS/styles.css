@@ -144,5 +144,14 @@ $ -> Ends With
     margin: 20px;
     /* margin: 80px 40px; */
     /* margin: auto; */
+
+    /* display: none; */
 }
 
+/* .about-me {
+    float: right;
+} */
+
+.my-form-item {
+    display: block;
+}
