@@ -5,13 +5,14 @@ body {
     background: linear-gradient(to bottom, rgba(123, 168, 232, 1), rgba(123, 168, 232, 0.3));
     /* font-size: 1mm; */
     /* font-size: 20px; */
-    font-size: 1.1em;
+    font-size: 1em;
     color: rgb(43, 46, 44);
 
     text-transform: none;
     text-align: justify;
 
     font-family: 'Quicksand', sans-serif;
+    padding: 15px;
 }
 
 h1 {
@@ -124,4 +125,24 @@ $ -> Ends With
 /* cm, mm, in, px, em, rem, vh, vw, % */
 
 /* TEXTS AND FONTS */
+
+/* BOX MODEL */
+
+#image-one {
+    height: 300px;
+    width: 70vw;
+
+    /* border: thickness style color */
+    border: 5px solid black;
+
+    /* padding: top right bottom left; */
+    padding: 15px;
+    /* padding: 5px 10px; */
+    /* padding: 5px 10px 15px 20px; */
+
+    /* margin: top right bottom left */
+    margin: 20px;
+    /* margin: 80px 40px; */
+    /* margin: auto; */
+}
 
