@@ -155,3 +155,30 @@ $ -> Ends With
 .my-form-item {
     display: block;
 }
+
+/* FLEXBOXES */
+.container {
+    background-color: rgb(256, 256, 256);
+    padding: 10px;
+    margin-top: 10px;
+
+    display: flex;
+    /* flex-direction: column-reverse; */
+    flex-wrap: wrap;
+
+    justify-content: space-around;
+
+    /* align-items: center; */
+}
+
+.container-item {
+    background: rgb(36, 112, 55);
+    /* border-radius: 100%; */
+    color: white;
+    font-size: 25px;
+    text-align: center;
+
+    width: 70px;
+    line-height: 50px;
+    margin: 10px;
+}
