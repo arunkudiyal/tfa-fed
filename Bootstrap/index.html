@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="./styles.css"> -->
+    <title>Bootstrap Cheatsheet</title>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="page-header">Welcome to Bootstrap! <small>By Arun Kudiyal</small> </h1>
+
+        <!-- Paragraphs -->
+        <h3>Paragraphs : </h3> <br>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt repellat error, hic debitis et aliquid magnam quisquam repudiandae inventore voluptatem qui omnis mollitia explicabo nesciunt cumque voluptates consectetur voluptas expedita?</p>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto corporis autem quis animi optio reprehenderit magni accusantium, sint distinctio voluptates! Quia a <mark>dolor voluptas</mark> odio aperiam dignissimos id repudiandae. Ratione asperiores veritatis incidunt velit quam ab libero ipsum beatae praesentium nisi inventore maiores odio quae modi non fugiat, mollitia iure expedita aut hic nostrum deleniti pariatur ducimus reiciendis. Rerum, deleniti?</p>
+
+        <hr>
+
+        <h3>Alignments & Transformations : </h3> <br>
+        <p class="text-left">Left - Aligned</p>
+        <p class="text-center">Center - Aligned</p>
+        <p class="text-right">Right - Aligned</p>
+        <p class="text-justify">Justified Text</p>
+        <p class="text-nowrap">No Wrapped Text</p>
+
+        <hr>
+
+        <h3>Lists : </h3> <br>
+        <ul class="list-unstyled">
+            <li>List Item - 1</li>
+            <li>List Item - 2</li>
+            <li>List Item - 3</li>
+            <li>List Item - 4</li>
+            <li>List Item - 5</li>
+            <li>List Item - 6</li>
+        </ul>
+
+        <!-- Nav-Bar -->
+        <ul class="list-inline">
+            <a href="#"><li>Home</li></a>
+            <li>Products</li>
+            <li>Services</li>
+            <li>About Us</li>
+            <li>Contact Us</li>
+        </ul>
+
+        <hr>
+
+        <h3>Contextual Class : </h3> <br>
+        <p class="text-primary">Pragraph - 1</p>
+        <p class="text-success">Pragraph - 2</p>
+        <p class="text-info">Pragraph - 3</p>
+        <p class="text-danger">Pragraph - 4</p>
+        <p class="text-warning">Pragraph - 5</p>
+        <p class="text-muted">Pragraph - 6</p>
+
+        <hr>
+        
+        <p class="bg-primary">Pragraph - 1</p>
+        <p class="bg-success">Pragraph - 2</p>
+        <p class="bg-info">Pragraph - 3</p>
+        <p class="bg-danger">Pragraph - 4</p>
+        <p class="bg-warning">Pragraph - 5</p>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h3>Buttons : </h3> <br>
+
+        <button class="btn btn-primary">Button</button>
+        <a href="#" class="btn btn-danger">Link</a>
+        <input class="btn btn-success" type="submit" 
+        value="Submit">
+
+        <button class="btn btn-warning">Button - 2</button>
+        <button class="btn btn-warning">Button - 2</button>
+        <button class="btn btn-link">Button - 2</button>
+
+        <hr>
+
+        <h3>Button Sizes : </h3>
+        <button class="btn btn-success btn-lg">Button - 2</button>
+        <button class="btn btn-success btn-sm">Button - 2</button>
+        <button class="btn btn-success btn-xs">Button - 2</button>
+
+        <button class="btn btn-warning disabled">Button - 2</button>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h3>Forms : </h3> <br>
+
+        <form action="#">
+            <div class="form-group">
+                <label>First Name : </label>
+                <input class="form-control" type="text" placeholder="Enter your first name">
+            </div>
+
+            <div class="form-group">
+                <label>Last Name : </label>
+                <input class="form-control" type="text" placeholder="Enter your last name">
+            </div>
+
+            <div class="form-group">
+                <label>Email : </label>
+                <input class="form-control" type="email" placeholder="Enter your Email">
+            </div>
+
+            <div class="form-group">
+                <label>Password : </label>
+                <input class="form-control" type="text" placeholder="Enter your password">
+            </div>
+
+            <div class="form-group">
+                <label>Gender : </label>
+                <select class="form-control">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Others</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Message : </label>
+                <textarea class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox"> I agree with the terms & conditions
+            </div>
+
+            <div class="form-group">
+                <input class="form-control" type="file">
+            </div>
+
+            <input class="btn btn-success btn-lg" type="submit">
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h3>Tables : </h3> <br>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <thead><h4 style="text-align: center;">List of Employees : </h4></thead>
+            <thead>
+                <th>Emp. Name</th>
+                <th>Emp. Email</th>
+                <th>Emp. Age</th>
+                <th>Emp. designation</th>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Tim Cook</td>
+                    <td>time.cook@apple.com</td>
+                    <td>60</td>
+                    <td>CEO</td>
+                </tr>
+
+                <tr>
+                    <td>Creg</td>
+                    <td>creg.b@apple.com</td>
+                    <td>55</td>
+                    <td>President - SDE</td>
+                </tr>
+
+                <tr>
+                    <td>Jogn Ives</td>
+                    <td>john.ives@apple.com</td>
+                    <td>45</td>
+                    <td>President - UI</td>
+                </tr>
+
+                <tr>
+                    <td>John Adams</td>
+                    <td>john.adams@apple.com</td>
+                    <td>30</td>
+                    <td>Product Manager</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h3>Progress Bar : </h3> <br>
+
+        <h4>Your Progress is: </h4>
+        <div class="progress">
+            <div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: 80%;">80%</div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container">
+
+        <h3>Bootstrap - Grids : </h3>
+
+        <h5>6 x 6 Grid : </h5>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor pariatur quod optio eveniet, maxime illo doloremque fugiat quas atque, totam veritatis consequuntur perspiciatis temporibus saepe quibusdam vel reprehenderit consectetur quisquam.</p>
+            </div>
+
+            <div class="col-md-6">
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit ut deserunt corporis dolores ipsa officia modi optio quae atque natus distinctio, nemo earum reiciendis amet magnam aperiam, labore adipisci consequatur!</p>
+            </div>
+        </div>
+
+        <h5>3 x 6 x 3</h5>
+        <div class="row">
+            <div class="col-md-3">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima magni magnam obcaecati delectus pariatur harum culpa, voluptas voluptates animi officia quidem aliquid assumenda eveniet fugit, tempore dolores. Natus, accusantium consequuntur.</p>
+            </div>
+
+            <div class="col-md-6">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima magni magnam obcaecati delectus pariatur harum culpa, voluptas voluptates animi officia quidem aliquid assumenda eveniet fugit, tempore dolores. Natus, accusantium consequuntur.</p>
+            </div>
+
+            <div class="col-md-3">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima magni magnam obcaecati delectus pariatur harum culpa, voluptas voluptates animi officia quidem aliquid assumenda eveniet fugit, tempore dolores. Natus, accusantium consequuntur.</p>
+            </div>
+        </div>
+
+        <h5>8 x 4 Grid : </h5>
+        <div class="row">
+            <div class="col-md-8">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam soluta, cum explicabo magni officia a iure at vitae, itaque eius alias amet, repellendus cumque impedit dolores veritatis error atque placeat aliquid labore quaerat. Magnam ad in praesentium, ratione nulla non dicta esse consectetur placeat ipsam, ducimus quo voluptas. Et, illo nobis velit nulla, quibusdam possimus dicta nostrum, quidem voluptatem id ipsum facere quae soluta modi voluptates commodi fuga. Accusantium, autem.</p>
+            </div>
+
+            <div class="col-md-4">
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, quidem tenetur doloribus iste blanditiis, aperiam totam facere mollitia, iusto eveniet ea architecto et debitis cumque? Magni a porro quibusdam suscipit, sequi provident distinctio nam eius?</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 400px"></div>
+</body>
+</html>
