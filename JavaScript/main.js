@@ -11,6 +11,7 @@
 // Variables & constants -> variableName = variableValue(constant)
 
 // DataTypes - Primitive DataType -  Number, String, Boolean, Null, Undefined & Symbols
+// Non-Primitive DataTypes - Array, Objects & ArrayOfObjects, JSON 
 
 a = 20
 b = 'Technology for All'
@@ -49,16 +50,16 @@ const myName = 'Arun'
 const str = 'This is a String'
 
 // Find the length of the String
-console.log(str.length);
+// console.log(str.length);
 
 // Chang the case
-console.log(str.toUpperCase())
-console.log(str.toLowerCase())
+// console.log(str.toUpperCase())
+// console.log(str.toLowerCase())
 
 // Sub-String
-console.log(str.substr(7))
-console.log(str.substr(13))         // startIndex (inc) till the end
-console.log(str.substring(3, 12));  // startIndex(inc), endIndex(exc)
+// console.log(str.substr(7))
+// console.log(str.substr(13))         // startIndex (inc) till the end
+// console.log(str.substring(3, 12));  // startIndex(inc), endIndex(exc)
 
 // Split
 // const diffProgLanguages = str.split(', ');       // Return you with an 'Array'
@@ -67,14 +68,165 @@ console.log(str.substring(3, 12));  // startIndex(inc), endIndex(exc)
 // console.log(diffProgLanguages[4]);
 
 // indexOf - returns the index value of alphabet, return -1 if the alphabet doesn't exist
-console.log('Index of i : ' + str.indexOf('z'));
+// console.log('Index of i : ' + str.indexOf('z'));
 
 // String Concatination (Merging the strings) & String Literals
 const myLuvkyNumber = 5
-console.log('My lucky number is ' + myLuvkyNumber + ', this ia an example');
+// console.log('My lucky number is ' + myLuvkyNumber + ', this ia an example');
 
 // Strings - '', "", ``
-console.log(`My lucky number is ${myLuvkyNumber}, this ia an example`);
+// console.log(`My lucky number is ${myLuvkyNumber}, this ia an example`);
 
 
-// ARRAYS IN JAVASCRIPT
+// ARRAYS IN JAVASCRIPT - Collection of Items
+// 2 ways Array - 1. Using Array Contrsuctor
+
+// const names = new Array('Dipti', 'Priya', 'Srija', 'Arun', 'Vamsi')
+// console.log(names)
+// // Access the data from the Array
+// console.log(names[3]);
+
+// ES6 - Use of [ ] symbol
+
+// const courses = ['Data Science', 'FSD', 'Machine Learning', 'Data Structures']
+// console.log(courses);
+// // Access 
+// console.log(courses[1]);
+
+// // Contain multiple data types in a single Array
+// const items = [10, 10.5, 'Arun', true, null, undefined]
+// console.log(items);
+
+
+// OBJECTS IN JS - { key: value }
+const user = {
+    firstName: 'Harry',
+    lastName: 'Potter',
+    age: 22,
+
+    // include Arrays inside of an object
+    hobbies: ['Magic', 'Getting in trouble', 'Wandering'],
+    role: 'Student',
+    isCool: true,
+
+    // include objects within object
+    address: {
+        street: '5th Avenue',
+        city: 'London',
+        country: 'United Kingdoms'
+    }
+}
+
+// console.log(user);
+
+// Access the values from the Object
+// console.log(`Hi, my name is ${user.firstName} ${user.lastName}. I am ${user.age} years old. I am a ${user.role}. My hobbies are ${user.hobbies[0]}, ${user.hobbies[2]}. I live in ${user.address.city}`);
+
+
+// ARRAY OF OBJECTS ->  [ {}, {}, {}, {} ]
+
+const employees = [
+    {
+        emp_id: 1001,
+        designation: 'SDE',
+        company: 'Wipro',
+        yearsOfExp: 3,
+        skiils: ['C', 'C++', 'Java'],
+        location: {
+            officeLoaction: 'Mumbai',
+            pin: 12345
+        }
+    }, 
+    {
+        emp_id: 1023,
+        designation: 'Tester',
+        company: 'Facebook',
+        yearsOfExp: 3,
+        skiils: ['Mocha', 'JUnit'],
+        location: {
+            officeLoaction: 'Hyderabad',
+            pin: 12342
+        }
+    }, 
+    {
+        emp_id: 1021,
+        designation: 'SME',
+        company: 'Apple',
+        yearsOfExp: 5,
+        skiils: ['JS', 'React', 'Angular'],
+        location: {
+            officeLoaction: 'Bangalore',
+            pin: 12323
+        }
+    }, 
+    {
+        emp_id: 1065,
+        designation: 'Content Designer',
+        company: 'Netflix',
+        yearsOfExp: 2,
+        skiils: ['Wordpress', 'Photoshop'],
+        location: {
+            officeLoaction: 'Delhi',
+            pin: 12001
+        }
+    }
+]
+
+console.log(employees);
+
+// Accessing the ArrayOfObjects
+
+// 1. I want the emp_id of each employee
+console.log(`${employees[0].emp_id}, ${employees[1].emp_id}, ${employees[2].emp_id}, ${employees[3].emp_id}`);
+
+// 2. One skill from each employee
+console.log(`${employees[0].skiils[0]}, ${employees[1].skiils[0]}, ${employees[2].skiils[0]}, ${employees[3].skiils[0]}`);
+
+// 3. Office Loaction of all employees
+console.log(`${employees[0].location.officeLoaction}, ${employees[1].location.officeLoaction}, ${employees[2].location.officeLoaction}, ${employees[3].location.officeLoaction}`);
+
+
+// CONDITIONALS - if, else
+if(employees[0].yearsOfExp < 3) {
+    console.log('Not fit for JOB');
+} else {
+    console.log('Fit for the JOB');
+}
+
+// Short hand -> condition ? true : false
+employees[1].yearsOfExp > 3 ? console.log('FIT FOR JOB') : console.log('NOT FIT FOR JOB'); 
+
+// if, else-if, else
+
+// AGE TRACKER - < 18 [KID], >=18 TEEN <30, >=30 ADULT
+const age = 30
+if(age < 18) {
+    console.log('Hey, you are a KID')
+} else if(age >= 18 && age < 30) {
+    console.log('Hey, you are TEEN')
+} else {
+    console.log('Hey you are an ADULT')
+}
+
+
+// *** FUN STUFF ***
+
+const answer = 10 / 0
+console.log(answer)             // Infinity
+
+const answer1 = 20 / 'Arun'
+console.log(answer1);           // NaN
+
+const answer2 = 'Hi' / 'Arun'
+console.log(answer2);           // NaN
+
+const values = ['🥚', '🐓']
+// Sort the values
+const output = values.sort()
+console.log(output);
+
+if(11 === 11) {
+    console.log('They are same');
+} else {
+    console.log('They are NOT same');
+}
