@@ -125,108 +125,235 @@ const user = {
 
 // ARRAY OF OBJECTS ->  [ {}, {}, {}, {} ]
 
-const employees = [
-    {
-        emp_id: 1001,
-        designation: 'SDE',
-        company: 'Wipro',
-        yearsOfExp: 3,
-        skiils: ['C', 'C++', 'Java'],
-        location: {
-            officeLoaction: 'Mumbai',
-            pin: 12345
-        }
-    }, 
-    {
-        emp_id: 1023,
-        designation: 'Tester',
-        company: 'Facebook',
-        yearsOfExp: 3,
-        skiils: ['Mocha', 'JUnit'],
-        location: {
-            officeLoaction: 'Hyderabad',
-            pin: 12342
-        }
-    }, 
-    {
-        emp_id: 1021,
-        designation: 'SME',
-        company: 'Apple',
-        yearsOfExp: 5,
-        skiils: ['JS', 'React', 'Angular'],
-        location: {
-            officeLoaction: 'Bangalore',
-            pin: 12323
-        }
-    }, 
-    {
-        emp_id: 1065,
-        designation: 'Content Designer',
-        company: 'Netflix',
-        yearsOfExp: 2,
-        skiils: ['Wordpress', 'Photoshop'],
-        location: {
-            officeLoaction: 'Delhi',
-            pin: 12001
-        }
-    }
-]
+// const employees = [
+//     {
+//         emp_id: 1001,
+//         designation: 'SDE',
+//         company: 'Wipro',
+//         yearsOfExp: 3,
+//         skiils: ['C', 'C++', 'Java'],
+//         location: {
+//             officeLoaction: 'Mumbai',
+//             pin: 12345
+//         }
+//     }, 
+//     {
+//         emp_id: 1023,
+//         designation: 'Tester',
+//         company: 'Facebook',
+//         yearsOfExp: 3,
+//         skiils: ['Mocha', 'JUnit'],
+//         location: {
+//             officeLoaction: 'Hyderabad',
+//             pin: 12342
+//         }
+//     }, 
+//     {
+//         emp_id: 1021,
+//         designation: 'SME',
+//         company: 'Apple',
+//         yearsOfExp: 5,
+//         skiils: ['JS', 'React', 'Angular'],
+//         location: {
+//             officeLoaction: 'Bangalore',
+//             pin: 12323
+//         }
+//     }, 
+//     {
+//         emp_id: 1065,
+//         designation: 'Content Designer',
+//         company: 'Netflix',
+//         yearsOfExp: 2,
+//         skiils: ['Wordpress', 'Photoshop'],
+//         location: {
+//             officeLoaction: 'Delhi',
+//             pin: 12001
+//         }
+//     }
+// ]
 
-console.log(employees);
+// console.log(employees);
 
 // Accessing the ArrayOfObjects
 
 // 1. I want the emp_id of each employee
-console.log(`${employees[0].emp_id}, ${employees[1].emp_id}, ${employees[2].emp_id}, ${employees[3].emp_id}`);
+// console.log(`${employees[0].emp_id}, ${employees[1].emp_id}, ${employees[2].emp_id}, ${employees[3].emp_id}`);
 
-// 2. One skill from each employee
-console.log(`${employees[0].skiils[0]}, ${employees[1].skiils[0]}, ${employees[2].skiils[0]}, ${employees[3].skiils[0]}`);
+// // 2. One skill from each employee
+// console.log(`${employees[0].skiils[0]}, ${employees[1].skiils[0]}, ${employees[2].skiils[0]}, ${employees[3].skiils[0]}`);
 
-// 3. Office Loaction of all employees
-console.log(`${employees[0].location.officeLoaction}, ${employees[1].location.officeLoaction}, ${employees[2].location.officeLoaction}, ${employees[3].location.officeLoaction}`);
+// // 3. Office Loaction of all employees
+// console.log(`${employees[0].location.officeLoaction}, ${employees[1].location.officeLoaction}, ${employees[2].location.officeLoaction}, ${employees[3].location.officeLoaction}`);
 
 
 // CONDITIONALS - if, else
-if(employees[0].yearsOfExp < 3) {
-    console.log('Not fit for JOB');
-} else {
-    console.log('Fit for the JOB');
-}
+// if(employees[0].yearsOfExp < 3) {
+//     console.log('Not fit for JOB');
+// } else {
+//     console.log('Fit for the JOB');
+// }
 
 // Short hand -> condition ? true : false
-employees[1].yearsOfExp > 3 ? console.log('FIT FOR JOB') : console.log('NOT FIT FOR JOB'); 
+// employees[1].yearsOfExp > 3 ? console.log('FIT FOR JOB') : console.log('NOT FIT FOR JOB'); 
 
 // if, else-if, else
 
 // AGE TRACKER - < 18 [KID], >=18 TEEN <30, >=30 ADULT
-const age = 30
-if(age < 18) {
-    console.log('Hey, you are a KID')
-} else if(age >= 18 && age < 30) {
-    console.log('Hey, you are TEEN')
-} else {
-    console.log('Hey you are an ADULT')
-}
+// const age = 30
+// if(age < 18) {
+//     console.log('Hey, you are a KID')
+// } else if(age >= 18 && age < 30) {
+//     console.log('Hey, you are TEEN')
+// } else {
+//     console.log('Hey you are an ADULT')
+// }
 
 
 // *** FUN STUFF ***
 
-const answer = 10 / 0
-console.log(answer)             // Infinity
+// const answer = 10 / 0
+// console.log(answer)             // Infinity
 
-const answer1 = 20 / 'Arun'
-console.log(answer1);           // NaN
+// const answer1 = 20 / 'Arun'
+// console.log(answer1);           // NaN
 
-const answer2 = 'Hi' / 'Arun'
-console.log(answer2);           // NaN
+// const answer2 = 'Hi' / 'Arun'
+// console.log(answer2);           // NaN
 
-const values = ['🥚', '🐓']
-// Sort the values
-const output = values.sort()
-console.log(output);
+// const values = ['🥚', '🐓']
+// // Sort the values
+// const output = values.sort()
+// console.log(output);
 
-if(11 === 11) {
-    console.log('They are same');
-} else {
-    console.log('They are NOT same');
+// if(11 === 11) {
+//     console.log('They are same');
+// } else {
+//     console.log('They are NOT same');
+// }
+
+
+// JSON - JS Object Notation
+// console.log(employees);
+
+// // stringify() - Convert ArrayOfObjects into JSON
+// const jsonData = JSON.stringify(employees)
+// console.log(jsonData);
+
+// // parse() - Convert JSON into ArrayOfObject
+// const arrayOfObjects = JSON.parse(jsonData)
+// console.log(arrayOfObjects);
+
+
+// var, let & const
+// age > 30 - half the age : double the age
+
+// const age = 30
+// if(age > 30) {
+//     const newAge = age / 2
+//     console.log(newAge)
+// } else {
+//     const newAge = age * 2
+//     console.log(newAge)
+// }
+
+// console.log(newAge);
+
+
+// LOOPS
+
+// 1. Basic Loops - for() & while()
+// 2. Higher Order Array Methods - for-of, for-in, map, filter, reduce
+
+// Print numbers from 1 to 15
+
+// for(initialization; condition; inc/dec)
+// for(let i=1; i <= 15; i++) {
+//     console.log(`Value is ${i}`);
+// } 
+
+// Table of 5 
+// for(let i=5; i <= 50; i=i+5) {
+//     console.log(`5 x ${i/5} = ${i}`)
+// }
+
+// initilaization
+// while(condition) {
+//     inc/dec
+// }
+
+// let i = 1
+// while(i <= 10) {
+//     console.log(`The value is ${i}`)
+//     i+=1
+// }
+
+// // Priniting the Table of 2
+// let j = 2
+// while(j <= 20) {
+//     console.log(`2 x ${j/2} = ${j}`);
+//     j+=2
+// }
+
+
+// Array of Object
+const todos = [
+    {
+        id: 1,
+        task: 'Meeting with the Team',
+        isCompleted: true
+    },
+    {
+        id: 2,
+        task: 'Take out the Trash',
+        isCompleted: false
+    },
+    {
+        id: 3,
+        task: 'Take my dog for a walk',
+        isCompleted: true
+    }
+]
+
+// const fruits = ['Apple', 'Mango', 'Banana', 'Pear', 'Watermelon']
+// console.log(fruits.length);
+
+// Length of the array
+// console.log(todos.length);
+
+// Agenda - 
+// for(let i=0; i < todos.length; i++) {
+//     console.log(todos[i].task);
+// }
+
+// 1. You are iterating on the whole array
+// 2. If you don't wanna use array[index]
+
+// for-of - for(let local of array) { ... }
+
+// for(let todo of todos) {
+//     // print only those tasks whose isCompleted is true
+//     todo.isCompleted === true ? console.log(todo.task) : ''
+// }
+
+
+// *** FUNCTIONS ***
+// Re-usable block of code that you can use anywhere in the code
+
+// 1. Traditional Way
+// 2. ES6 Way - New & Most Popular
+
+// 1. function functionName(parameters) { ...bodyOfFunction }
+
+function greet(name) {
+    console.log(`Good evening ${name}`);
 }
+
+function add(a, b) {
+    return (a + b)
+}
+
+// Calling the function
+greet('Vaishnavi')
+
+const result = add(10, 20)
+console.log(`The result of 10 + 20 is ${result}`);
