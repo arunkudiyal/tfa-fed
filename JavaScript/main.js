@@ -357,3 +357,9 @@ greet('Vaishnavi')
 
 const result = add(10, 20)
 console.log(`The result of 10 + 20 is ${result}`);
+
+
+// ES6 Arrow Function ---> accessModifier ---> 
+const greet = (name) => {
+    console.log(`Good evening ${name}`);
+}
