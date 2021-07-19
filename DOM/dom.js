@@ -132,11 +132,92 @@
 // })
 
 // FUN ACTIVITY WITH THE BOX
-const box = document.getElementById('box')
-box.addEventListener('mouseenter', (e) => {
-    box.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 100)`
+// const box = document.getElementById('box')
+// box.addEventListener('mouseenter', (e) => {
+//     box.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 100)`
+// })
+
+// box.addEventListener('mouseleave', (e) => {
+//     box.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 150)`
+// })
+
+
+
+// DOM TRAVERSALS - A method to access HTML Elements based on relationships
+// parent, children, siblings
+
+// 1. PARENT NODES
+// const list = document.getElementById('items')
+// list.parentElement.style.backgroundColor = 'yellow'
+
+// chaining of DOM
+// console.log(list.parentElement.parentElement);
+// list.parentElement.parentElement.style.backgroundColor = 'grey';
+
+// FUN ACTIVITY
+const button = document.getElementById('button')
+button.addEventListener('click', () => {
+    list.parentElement.style.backgroundColor = 'yellow';
 })
 
-box.addEventListener('mouseleave', (e) => {
-    box.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 150)`
+
+// CHILDREN NODES
+// console.log(list.children);
+// console.log(list.children[0]);
+
+// firstChild, lastName
+// console.log(list.firstChild);                // text -> Indentation
+// console.log(list.firstElementChild);
+
+// console.log(list.lastChild);                 // text -> Indentation
+// console.log(list.lastElementChild);
+
+
+
+// SIBLINGS
+// console.log(list.previousSibling);              // text -> Indentation
+// console.log(list.previousElementSibling);
+
+// console.log(list.nextSibling);
+// console.log(list.nextElementSibling);
+
+
+
+// VVVVVVV IMPORTANT
+// Creating HTML Elements
+
+// const newLI = document.createElement('li')
+
+// Set the Attributes of the HTML Element
+// newLI.id = 'new-li'
+// newLI.className = 'list-group-item'
+// newLI.textContent = `Item 7`
+
+// const list = document.getElementById('items')
+// // Add this in the ul list
+// list.appendChild(newLI)
+
+// console.log(list.lastElementChild);
+
+// console.log(newLI);
+
+
+
+// Adding Items through Form
+const newLI = document.createElement('li')
+newLI.className = 'list-group-item'
+
+const text = document.getElementById('text-input')
+text.addEventListener('keyup', (e) => {
+    const textData = e.target.value
+    newLI.textContent = textData
+    console.log(newLI);
+    const button = document.getElementById('submitBtn')
+        button.addEventListener('click', (e) => {
+        e.preventDefault()
+        const list = document.getElementById('items')
+        list.appendChild(newLI)
+    })
 })
+
+console.log(newLI);
