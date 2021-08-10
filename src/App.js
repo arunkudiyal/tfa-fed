@@ -23,12 +23,13 @@ class App extends Component {
   // STATES ARE IMMUTATBLE (Cannot be changed)
   // States of the AppComponent - DATA OF THE COMP
   state = {
-    person: [
+    persons: [
       {name: 'Max', age: '21'},
       {name: 'Evan', age: '24'},
       {name: 'Ben', age: '22'}
     ],
-    otherState: 'Some other State'
+    otherState: 'Some other State',
+    showPerson: false
   }
 
   // Methods - Functionalities
@@ -40,7 +41,7 @@ class App extends Component {
 
     // changeState() --> Used by the CLASS-BASED Component
     this.setState( {
-      person: [
+      persons: [
         {name: 'Maxilliam', age: '21'},
         {name: 'Evan Potter', age: '25'},
         {name: 'Benjamin', age: '27'}
@@ -49,16 +50,6 @@ class App extends Component {
 
     console.log(this.state);
   }
-
-  // changeName = (newName) => {
-  //   this.setState( {
-  //     person: [
-  //       {name: newName, age: '21'},
-  //       {name: newName, age: '25'},
-  //       {name: 'Benjamin', age: '27'}
-  //     ]
-  //   } )
-  // }
 
   changeName = (event) => {
     this.setState({
@@ -69,30 +60,72 @@ class App extends Component {
       ]
     })
   }
+
+  togglePerson = () => {
+    const doShow = this.state.showPerson
+    this.setState({showPerson: !doShow}) 
+  }
+
+  // displayPerson = () => {
+  //   var person = (null)
+
+  //   if(this.state.showPerson) {
+  //     person = (
+  //       <div>
+  //           <Person 
+  //             name={this.state.person[0].name} 
+  //             age={this.state.person[0].age} />
+  //             {/* myClick={() => this.changeName('Max!!!!!')} /> */}
+
+  //           <Person 
+  //             name={this.state.person[1].name} 
+  //             age={this.state.person[1].age}
+  //             myClick={this.changeName.bind(this, 'Evan')} 
+  //             changed={this.changeName} />
+
+  //           <Person 
+  //             name={this.state.person[2].name} 
+  //             age={this.state.person[2].age}
+  //             changed={this.changeName} />
+
+  //       </div>
+  //     )
+  //   }
+  //   return
+  // }
+
+  deletePerson = (personIndex) => {
+    const persons = this.state.persons
+    persons.splice(personIndex, 1)
+    this.setState({persons: persons})
+  } 
  
   render() {
     return(
-      // Access the data from the comp state
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>
-          <Person 
-            name={this.state.person[0].name} 
-            age={this.state.person[0].age} />
-            {/* myClick={() => this.changeName('Max!!!!!')} /> */}
 
-          <Person 
-            name={this.state.person[1].name} 
-            age={this.state.person[1].age}
-            myClick={this.changeName.bind(this, 'Evan')} 
-            changed={this.changeName} />
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <button 
+          className="btn btn-success"
+          onClick={this.togglePerson} >Toggle Person</button>
 
-          <Person 
-            name={this.state.person[2].name} 
-            age={this.state.person[2].age}
-            changed={this.changeName} />
+          {/* condition ? true : false */}
+
+          {/* { this.state.showPerson ?  : null }  */}
+
+          {/* { () => { var items = this.displayPerson().person } } */}
+
+
+          { this.state.showPerson ? 
+            <div>
+              { this.state.persons.map((person, index) => {
+                  return <Person
+                      click={ () => this.deletePerson(index) } 
+                      name={person.name} 
+                      age={person.age} />
+              }) }
+            </div> : null }
         </div>
-
-        <button style={{ alignSelf: 'center' }} onClick={this.changeState} className="btn btn-primary">Change State</button>
       </div>
     )
   }
