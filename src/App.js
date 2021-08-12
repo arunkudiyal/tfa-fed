@@ -1,6 +1,8 @@
 // STATE IN CLASS-BASED COMPONENT
 import { Component } from "react";
+import Radium from 'radium'
 import './components/Person/Person.css'
+import './App.css'
 import Person from "./components/Person/Person";
 
 class App extends Component {
@@ -61,7 +63,20 @@ class App extends Component {
     this.setState({persons: persons})
   } 
  
+  // #button:hover {...}
+
   render() {
+    const buttonStyle = {
+      backgroundColor: 'green',
+      color: 'white',
+      border: '2px solid black',
+      padding: '10px',
+      cursor: 'pointer',
+      ':hover': {
+        backgroundColor: 'lightgreen',
+        color: 'black'
+      }
+    }
 
     let persons = null;
 
@@ -78,14 +93,30 @@ class App extends Component {
               }) }
           </div>
       )
+      buttonStyle.backgroundColor = 'red'
+      buttonStyle[':hover'] = {
+        backgroundColor: 'lightred',
+        color: 'black'
+      }
+    }
+
+    const classes = []
+    if(this.state.persons.length <= 5) {
+      classes.push('red')     // classes = ['red']
+    }
+    if(this.state.persons.length <= 1) {
+      classes.push('bold')    // classes = ['red', 'bold']
     }
 
     return(
-      <div>
+      <div className="App">
+        <h1 style={{ marginTop: '10px' }}>Demp Application</h1>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <button 
-          className="btn btn-success"
+          <button
+          style={buttonStyle} 
           onClick={this.togglePerson} >Toggle Person</button>
+          <p className={classes.join(' ')}>The list of Persons are as follows : </p>
+
           { persons }
         </div>
       </div>
@@ -93,4 +124,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Radium(App);
