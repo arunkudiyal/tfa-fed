@@ -1,11 +1,17 @@
 // STATE IN CLASS-BASED COMPONENT
 import { Component } from "react";
-import Radium from 'radium'
-import './components/Person/Person.css'
+import '../components/Persons/Person/Person.css'
 import './App.css'
-import Person from "./components/Person/Person";
+import Persons from "../components/Persons/Persons";
 
 class App extends Component {
+  constructor(props) {
+      super(props)
+      console.log(`[App.js] constructor, Props = ${this.props}`);
+      
+      // Declare the state
+  }
+
   // STATES ARE IMMUTATBLE (Cannot be changed)
   // States of the AppComponent - DATA OF THE COMP
   state = {
@@ -16,6 +22,15 @@ class App extends Component {
     ],
     otherState: 'Some other State',
     showPerson: false
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log(`[App.js] getDerivedStateFromProps`, props);
+    return state
+  }
+
+  componentDidMount() {
+      console.log(`[App.js] componentDidMount`);
   }
 
   // Methods - Functionalities
@@ -66,16 +81,14 @@ class App extends Component {
   // #button:hover {...}
 
   render() {
+    console.log(`[App.js] render`);
+
     const buttonStyle = {
       backgroundColor: 'green',
       color: 'white',
       border: '2px solid black',
       padding: '10px',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
+      cursor: 'pointer'
     }
 
     let persons = null;
@@ -83,21 +96,13 @@ class App extends Component {
     if(this.state.showPerson) {
       persons = (
           <div>
-              { this.state.persons.map((person, index) => {
-                  return <Person
-                      click={ () => this.deletePerson(index) } 
-                      name={person.name} 
-                      age={person.age}
-                      changed={ (event) => this.changeName(event, person.id) }
-                      key={person.id} />
-              }) }
+              <Persons 
+                persons={this.state.persons}
+                clicked={this.deletePerson}
+                changed={this.changeName} />
           </div>
       )
       buttonStyle.backgroundColor = 'red'
-      buttonStyle[':hover'] = {
-        backgroundColor: 'lightred',
-        color: 'black'
-      }
     }
 
     const classes = []
@@ -110,7 +115,7 @@ class App extends Component {
 
     return(
       <div className="App">
-        <h1 style={{ marginTop: '10px' }}>Demp Application</h1>
+        <h1 style={{ marginTop: '10px' }}>{this.props.appTitle}</h1>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <button
           style={buttonStyle} 
@@ -124,4 +129,4 @@ class App extends Component {
   }
 }
 
-export default Radium(App);
+export default App;

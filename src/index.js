@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './container/App'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App appTitle="Person Manager Apllication" />
   </React.StrictMode>,
   document.getElementById('root')
 );
