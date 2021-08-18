@@ -114,8 +114,8 @@ const alphabets = ['Z', 'U', 'A', 'C', 'B', 'N', 'M', 'K']
 
 
 // COMBINE METHODS
-const ageOfEachCompany = companies.map(company => (company.end - company.start)).reduce( (a, b) =>  a+b, 0)
-console.log(ageOfEachCompany);
+// const ageOfEachCompany = companies.map(company => (company.end - company.start)).reduce( (a, b) =>  a+b, 0)
+// console.log(ageOfEachCompany);
 
-const combined = ages.map(age => age*1).filter(age => age >= 21).sort((a,b) => a-b).reduce((a,b) => a+b, 0)
-console.log(combined);
+// const combined = ages.map(age => age*1).filter(age => age >= 21).sort((a,b) => a-b).reduce((a,b) => a+b, 0)
+// console.log(combined);
