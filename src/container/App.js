@@ -18,7 +18,8 @@ class App extends Component {
     persons: [
       {id:'person_1', name: 'Max', age: '21'},
       {id:'person_2', name: 'Evan', age: '24'},
-      {id:'person_3', name: 'Ben', age: '22'}
+      {id:'person_3', name: 'Ben', age: '22'},
+      {id:'person_4', name: 'Tom', age: '26'}
     ],
     otherState: 'Some other State',
     showPerson: false
@@ -29,8 +30,13 @@ class App extends Component {
     return state
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('[App.js] shouldComponentUpdate')
+    return true
+  }
+
   componentDidMount() {
-      console.log(`[App.js] componentDidMount`);
+    console.log(`[App.js] componentDidMount`);
   }
 
   // Methods - Functionalities
