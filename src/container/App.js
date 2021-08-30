@@ -1,5 +1,5 @@
 // STATE IN CLASS-BASED COMPONENT
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import '../components/Persons/Person/Person.css'
 import './App.css'
 import Persons from "../components/Persons/Persons";
@@ -22,7 +22,9 @@ class App extends Component {
       {id:'person_4', name: 'Tom', age: '26'}
     ],
     otherState: 'Some other State',
-    showPerson: false
+    showPerson: false,
+    changeCounter: 0,
+    authenticated: false
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -70,12 +72,21 @@ class App extends Component {
     newPersonState[personIndex] = person
 
     // change the state of that particular index
-    this.setState( {persons: newPersonState} )
+    this.setState((prevState, props) => {
+      return { 
+        persons: newPersonState, 
+        changeCounter: prevState.changeCounter + 1
+      }
+    })
   }
 
   togglePerson = () => {
     const doShow = this.state.showPerson
     this.setState({showPerson: !doShow}) 
+  }
+
+  loginHandler = () => {
+    this.setState({authenticated : true})
   }
 
   deletePerson = (personIndex) => {
@@ -94,7 +105,8 @@ class App extends Component {
       color: 'white',
       border: '2px solid black',
       padding: '10px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      marginBottom: '12px'
     }
 
     let persons = null;
@@ -105,7 +117,8 @@ class App extends Component {
               <Persons 
                 persons={this.state.persons}
                 clicked={this.deletePerson}
-                changed={this.changeName} />
+                changed={this.changeName}
+                isAuthenticated={this.state.authenticated} />
           </div>
       )
       buttonStyle.backgroundColor = 'red'
@@ -120,17 +133,23 @@ class App extends Component {
     }
 
     return(
-      <div className="App">
-        <h1 style={{ marginTop: '10px' }}>{this.props.appTitle}</h1>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <button
-          style={buttonStyle} 
-          onClick={this.togglePerson} >Toggle Person</button>
-          <p className={classes.join(' ')}>The list of Persons are as follows : </p>
+      <Fragment>
+        <div className="App">
+          <h1 style={{ marginTop: '10px' }}>{this.props.appTitle}</h1>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <button
+            style={buttonStyle} 
+            onClick={this.togglePerson} >Toggle Person</button>
+            <button 
+              className="btn btn-block btn-danger" 
+              style={{ marginBottom: '12px' }}
+              onClick={this.loginHandler}>Login</button>
+            <p className={classes.join(' ')}>The list of Persons are as follows : </p>
 
-          { persons }
+            { persons }
+          </div>
         </div>
-      </div>
+      </Fragment>
     )
   }
 }

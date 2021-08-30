@@ -6,3 +6,12 @@
     padding: 16px;
     text-align: center;
 }
+
+.NewClass {
+    width: 60%;
+    margin: 20px auto;
+    border: 5px solid red;
+    box-shadow: 0 2px 3px darkgrey;
+    padding: 16px;
+    text-align: center;
+}

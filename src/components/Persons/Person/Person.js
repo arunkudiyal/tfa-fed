@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react'
+import Aux from '../../../hoc/Aux'
+
+import './Person.css'
 
 const Person = (props) => {
     useEffect(() => {
@@ -6,7 +9,7 @@ const Person = (props) => {
 
         // HttpRequest / SideEffects
         setTimeout(() => {
-            alert('Saved the data to the DB!')
+            // alert('Saved the data to the DB!')
         }, 1000)
 
         // Perform something when the component is unmounted
@@ -24,11 +27,13 @@ const Person = (props) => {
 
     console.log(`[Person.js] rendering...`);
     return (
-        <div className="Person">
+        <Aux classes="Person">
+            {props.isAuth ? <p>Login Successfull...!</p> : <p>Plaese Login...</p>}
             <p onClick={props.click} className="lead">Hi, I am {props.name} and I am {props.age} years old</p>
             <input type="text" placeholder="Enter the name" onChange={props.changed} value={props.name} />
-        </div>
+        </Aux>
     )
 }
 
+// export default withClass(Person, "Person", "NewClass")
 export default Person
