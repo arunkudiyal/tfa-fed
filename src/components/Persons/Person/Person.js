@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Aux from '../../../hoc/Aux'
+import AuthContext from '../../../context/auth-context'
 
 import './Person.css'
 
@@ -28,7 +29,9 @@ const Person = (props) => {
     console.log(`[Person.js] rendering...`);
     return (
         <Aux classes="Person">
-            {props.isAuth ? <p>Login Successfull...!</p> : <p>Plaese Login...</p>}
+            <AuthContext.Consumer>
+                { (context) => context.authenticated ? <p> Login Successfull...! </p> : <p> Plaese Login... </p> }
+            </AuthContext.Consumer>
             <p onClick={props.click} className="lead">Hi, I am {props.name} and I am {props.age} years old</p>
             <input type="text" placeholder="Enter the name" onChange={props.changed} value={props.name} />
         </Aux>

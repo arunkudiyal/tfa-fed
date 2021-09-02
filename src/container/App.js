@@ -3,6 +3,7 @@ import { Component, Fragment } from "react";
 import '../components/Persons/Person/Person.css'
 import './App.css'
 import Persons from "../components/Persons/Persons";
+import AuthContext from "../context/auth-context";
 
 class App extends Component {
   constructor(props) {
@@ -118,7 +119,7 @@ class App extends Component {
                 persons={this.state.persons}
                 clicked={this.deletePerson}
                 changed={this.changeName}
-                isAuthenticated={this.state.authenticated} />
+              />
           </div>
       )
       buttonStyle.backgroundColor = 'red'
@@ -140,13 +141,15 @@ class App extends Component {
             <button
             style={buttonStyle} 
             onClick={this.togglePerson} >Toggle Person</button>
-            <button 
-              className="btn btn-block btn-danger" 
-              style={{ marginBottom: '12px' }}
-              onClick={this.loginHandler}>Login</button>
-            <p className={classes.join(' ')}>The list of Persons are as follows : </p>
+            <AuthContext.Provider value={ {authenticated: this.state.authenticated, login: this.loginHandler} } >
+              <button 
+                className="btn btn-block btn-danger" 
+                style={{ marginBottom: '12px' }}
+                onClick={this.loginHandler}>Login</button>
+              <p className={classes.join(' ')}>The list of Persons are as follows : </p>
 
-            { persons }
+              { persons }
+            </AuthContext.Provider>
           </div>
         </div>
       </Fragment>
