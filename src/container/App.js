@@ -13,6 +13,9 @@ class App extends Component {
       // Declare the state
   }
 
+  // create the instance of the context
+  static contextType = AuthContext
+
   // STATES ARE IMMUTATBLE (Cannot be changed)
   // States of the AppComponent - DATA OF THE COMP
   state = {
@@ -40,6 +43,7 @@ class App extends Component {
 
   componentDidMount() {
     console.log(`[App.js] componentDidMount`);
+    console.log(this.context.authenticated)
   }
 
   // Methods - Functionalities
