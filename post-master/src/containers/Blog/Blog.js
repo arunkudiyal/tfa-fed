@@ -9,21 +9,37 @@ import './Blog.css';
 class Blog extends Component {
     // Initializing empty state
     state = {
-        posts: []
+        posts: [],
+        selectedPostId: null
     }
 
     componentDidMount() {
         // How to make a request | Axios - PROMISES
         axios.get('https://jsonplaceholder.typicode.com/posts')
             .then(response => {
-                this.setState( {posts: response.data} )
+                const posts = response.data.slice(0, 4)
+                const updatedPost = posts.map(post => {
+                    return {
+                        ...post,
+                        author: 'Mona'
+                    }
+                })
+                this.setState( {posts: updatedPost} )
             })
             .catch(err => console.log(err))
     }
 
+    postSelected = (id) => {
+        this.setState({selectedPostId: id})
+    }
+
     render () {
         const posts = this.state.posts.map(post => {
-            return <Post key={post.id} title={post.title} />
+            return <Post 
+                key={post.id} 
+                title={post.title} 
+                author={post.author}
+                clicked={() => this.postSelected(post.id)} />
         })
 
         return (
@@ -32,7 +48,7 @@ class Blog extends Component {
                     {posts}
                 </section>
                 <section>
-                    <FullPost />
+                    <FullPost id={this.state.selectedPostId} />
                 </section>
                 <section>
                     <NewPost />
