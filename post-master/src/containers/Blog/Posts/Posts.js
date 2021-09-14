@@ -9,6 +9,8 @@ class Posts extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
+
         // How to make a request | Axios - PROMISES
         axios.get('https://jsonplaceholder.typicode.com/posts')
             .then(response => {
