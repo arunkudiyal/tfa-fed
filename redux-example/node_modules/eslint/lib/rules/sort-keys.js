@@ -9,7 +9,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const astUtils = require("../ast-utils"),
+const astUtils = require("./utils/ast-utils"),
     naturalCompare = require("natural-compare");
 
 //------------------------------------------------------------------------------
@@ -23,21 +23,25 @@ const astUtils = require("../ast-utils"),
  *   whether it's a computed property or not.
  * - If the property has a static name, this returns the static name.
  * - Otherwise, this returns null.
- *
- * @param {ASTNode} node - The `Property` node to get.
+ * @param {ASTNode} node The `Property` node to get.
  * @returns {string|null} The property name or null.
  * @private
  */
 function getPropertyName(node) {
-    return astUtils.getStaticPropertyName(node) || node.key.name || null;
+    const staticName = astUtils.getStaticPropertyName(node);
+
+    if (staticName !== null) {
+        return staticName;
+    }
+
+    return node.key.name || null;
 }
 
 /**
  * Functions which check that the given 2 names are in specific order.
  *
  * Postfix `I` is meant insensitive.
- * Postfix `N` is meant natual.
- *
+ * Postfix `N` is meant natural.
  * @private
  */
 const isValidOrders = {
@@ -73,11 +77,15 @@ const isValidOrders = {
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "require object keys to be sorted",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/sort-keys"
         },
+
         schema: [
             {
                 enum: ["asc", "desc"]
@@ -86,15 +94,26 @@ module.exports = {
                 type: "object",
                 properties: {
                     caseSensitive: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: true
                     },
                     natural: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: false
+                    },
+                    minKeys: {
+                        type: "integer",
+                        minimum: 2,
+                        default: 2
                     }
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+
+        messages: {
+            sortKeys: "Expected object keys to be in {{natural}}{{insensitive}}{{order}}ending order. '{{thisName}}' should be before '{{prevName}}'."
+        }
     },
 
     create(context) {
@@ -102,25 +121,33 @@ module.exports = {
         // Parse options.
         const order = context.options[0] || "asc";
         const options = context.options[1];
-        const insensitive = (options && options.caseSensitive) === false;
-        const natual = Boolean(options && options.natural);
+        const insensitive = options && options.caseSensitive === false;
+        const natural = options && options.natural;
+        const minKeys = options && options.minKeys;
         const isValidOrder = isValidOrders[
-            order + (insensitive ? "I" : "") + (natual ? "N" : "")
+            order + (insensitive ? "I" : "") + (natural ? "N" : "")
         ];
 
         // The stack to save the previous property's name for each object literals.
         let stack = null;
 
         return {
-            ObjectExpression() {
+            ObjectExpression(node) {
                 stack = {
                     upper: stack,
-                    prevName: null
+                    prevName: null,
+                    numKeys: node.properties.length
                 };
             },
 
             "ObjectExpression:exit"() {
                 stack = stack.upper;
+            },
+
+            SpreadElement(node) {
+                if (node.parent.type === "ObjectExpression") {
+                    stack.prevName = null;
+                }
             },
 
             Property(node) {
@@ -129,11 +156,14 @@ module.exports = {
                 }
 
                 const prevName = stack.prevName;
+                const numKeys = stack.numKeys;
                 const thisName = getPropertyName(node);
 
-                stack.prevName = thisName || prevName;
+                if (thisName !== null) {
+                    stack.prevName = thisName;
+                }
 
-                if (!prevName || !thisName) {
+                if (prevName === null || thisName === null || numKeys < minKeys) {
                     return;
                 }
 
@@ -141,13 +171,13 @@ module.exports = {
                     context.report({
                         node,
                         loc: node.key.loc,
-                        message: "Expected object keys to be in {{natual}}{{insensitive}}{{order}}ending order. '{{thisName}}' should be before '{{prevName}}'.",
+                        messageId: "sortKeys",
                         data: {
                             thisName,
                             prevName,
                             order,
                             insensitive: insensitive ? "insensitive " : "",
-                            natual: natual ? "natural " : ""
+                            natural: natural ? "natural " : ""
                         }
                     });
                 }

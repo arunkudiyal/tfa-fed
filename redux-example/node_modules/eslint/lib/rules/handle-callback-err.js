@@ -11,17 +11,27 @@
 
 module.exports = {
     meta: {
+        deprecated: true,
+
+        replacedBy: [],
+
+        type: "suggestion",
+
         docs: {
             description: "require error handling in callbacks",
             category: "Node.js and CommonJS",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/handle-callback-err"
         },
 
         schema: [
             {
                 type: "string"
             }
-        ]
+        ],
+        messages: {
+            expected: "Expected error to be handled."
+        }
     },
 
     create(context) {
@@ -46,7 +56,7 @@ module.exports = {
          */
         function matchesConfiguredErrorName(name) {
             if (isPattern(errorArgument)) {
-                const regexp = new RegExp(errorArgument);
+                const regexp = new RegExp(errorArgument, "u");
 
                 return regexp.test(name);
             }
@@ -56,7 +66,7 @@ module.exports = {
         /**
          * Get the parameters of a given function scope.
          * @param {Object} scope The function scope.
-         * @returns {array} All parameters of the given scope.
+         * @returns {Array} All parameters of the given scope.
          */
         function getParameters(scope) {
             return scope.variables.filter(variable => variable.defs[0] && variable.defs[0].type === "Parameter");
@@ -74,7 +84,7 @@ module.exports = {
 
             if (firstParameter && matchesConfiguredErrorName(firstParameter.name)) {
                 if (firstParameter.references.length === 0) {
-                    context.report({ node, message: "Expected error to be handled." });
+                    context.report({ node, messageId: "expected" });
                 }
             }
         }

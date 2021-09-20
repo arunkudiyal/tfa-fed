@@ -11,32 +11,47 @@
 
 module.exports = {
     meta: {
+        type: "layout",
+
         docs: {
             description: "enforce placing object properties on separate lines",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/object-property-newline"
         },
 
         schema: [
             {
                 type: "object",
                 properties: {
-                    allowMultiplePropertiesPerLine: {
-                        type: "boolean"
+                    allowAllPropertiesOnSameLine: {
+                        type: "boolean",
+                        default: false
+                    },
+                    allowMultiplePropertiesPerLine: { // Deprecated
+                        type: "boolean",
+                        default: false
                     }
                 },
                 additionalProperties: false
             }
         ],
 
-        fixable: "whitespace"
+        fixable: "whitespace",
+
+        messages: {
+            propertiesOnNewlineAll: "Object properties must go on a new line if they aren't all on the same line.",
+            propertiesOnNewline: "Object properties must go on a new line."
+        }
     },
 
     create(context) {
-        const allowSameLine = context.options[0] && Boolean(context.options[0].allowMultiplePropertiesPerLine);
-        const errorMessage = allowSameLine
-            ? "Object properties must go on a new line if they aren't all on the same line."
-            : "Object properties must go on a new line.";
+        const allowSameLine = context.options[0] && (
+            (context.options[0].allowAllPropertiesOnSameLine || context.options[0].allowMultiplePropertiesPerLine /* Deprecated */)
+        );
+        const messageId = allowSameLine
+            ? "propertiesOnNewlineAll"
+            : "propertiesOnNewline";
 
         const sourceCode = context.getSourceCode();
 
@@ -62,8 +77,8 @@ module.exports = {
                     if (lastTokenOfPreviousProperty.loc.end.line === firstTokenOfCurrentProperty.loc.start.line) {
                         context.report({
                             node,
-                            loc: firstTokenOfCurrentProperty.loc.start,
-                            message: errorMessage,
+                            loc: firstTokenOfCurrentProperty.loc,
+                            messageId,
                             fix(fixer) {
                                 const comma = sourceCode.getTokenBefore(firstTokenOfCurrentProperty);
                                 const rangeAfterComma = [comma.range[1], firstTokenOfCurrentProperty.range[0]];

@@ -5,19 +5,28 @@
 
 "use strict";
 
+const astUtils = require("./utils/ast-utils");
+
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
 
 module.exports = {
     meta: {
+        type: "problem",
+
         docs: {
             description: "disallow duplicate class members",
             category: "ECMAScript 6",
-            recommended: true
+            recommended: true,
+            url: "https://eslint.org/docs/rules/no-dupe-class-members"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            unexpected: "Duplicate name '{{name}}'."
+        }
     },
 
     create(context) {
@@ -25,8 +34,8 @@ module.exports = {
 
         /**
          * Gets state of a given member name.
-         * @param {string} name - A name of a member.
-         * @param {boolean} isStatic - A flag which specifies that is a static member.
+         * @param {string} name A name of a member.
+         * @param {boolean} isStatic A flag which specifies that is a static member.
          * @returns {Object} A state of a given member name.
          *   - retv.init {boolean} A flag which shows the name is declared as normal member.
          *   - retv.get {boolean} A flag which shows the name is declared as getter.
@@ -44,22 +53,6 @@ module.exports = {
             }
 
             return stateMap[key][isStatic ? "static" : "nonStatic"];
-        }
-
-        /**
-         * Gets the name text of a given node.
-         *
-         * @param {ASTNode} node - A node to get the name.
-         * @returns {string} The name text of the node.
-         */
-        function getName(node) {
-            switch (node.type) {
-                case "Identifier": return node.name;
-                case "Literal": return String(node.value);
-
-                /* istanbul ignore next: syntax error */
-                default: return "";
-            }
         }
 
         return {
@@ -81,11 +74,12 @@ module.exports = {
 
             // Reports the node if its name has been declared already.
             MethodDefinition(node) {
-                if (node.computed) {
+                const name = astUtils.getStaticPropertyName(node);
+
+                if (name === null || node.kind === "constructor") {
                     return;
                 }
 
-                const name = getName(node.key);
                 const state = getState(name, node.static);
                 let isDuplicate = false;
 
@@ -101,7 +95,7 @@ module.exports = {
                 }
 
                 if (isDuplicate) {
-                    context.report({ node, message: "Duplicate name '{{name}}'.", data: { name } });
+                    context.report({ node, messageId: "unexpected", data: { name } });
                 }
             }
         };

@@ -10,18 +10,29 @@
 
 module.exports = {
     meta: {
+        deprecated: true,
+
+        replacedBy: [],
+
+        type: "suggestion",
+
         docs: {
             description: "disallow string concatenation with `__dirname` and `__filename`",
             category: "Node.js and CommonJS",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-path-concat"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            usePathFunctions: "Use path.join() or path.resolve() instead of + to create paths."
+        }
     },
 
     create(context) {
 
-        const MATCHER = /^__(?:dir|file)name$/;
+        const MATCHER = /^__(?:dir|file)name$/u;
 
         //--------------------------------------------------------------------------
         // Public
@@ -39,7 +50,10 @@ module.exports = {
                         (right.type === "Identifier" && MATCHER.test(right.name)))
                 ) {
 
-                    context.report({ node, message: "Use path.join() or path.resolve() instead of + to create paths." });
+                    context.report({
+                        node,
+                        messageId: "usePathFunctions"
+                    });
                 }
             }
 

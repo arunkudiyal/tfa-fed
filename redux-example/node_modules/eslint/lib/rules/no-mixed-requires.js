@@ -11,10 +11,17 @@
 
 module.exports = {
     meta: {
+        deprecated: true,
+
+        replacedBy: [],
+
+        type: "suggestion",
+
         docs: {
             description: "disallow `require` calls to be mixed with regular variable declarations",
             category: "Node.js and CommonJS",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-mixed-requires"
         },
 
         schema: [
@@ -37,7 +44,12 @@ module.exports = {
                     }
                 ]
             }
-        ]
+        ],
+
+        messages: {
+            noMixRequire: "Do not mix 'require' and other declarations.",
+            noMixCoreModuleFileComputed: "Do not mix core, module, file and computed requires."
+        }
     },
 
     create(context) {
@@ -55,7 +67,6 @@ module.exports = {
 
         /**
          * Returns the list of built-in modules.
-         *
          * @returns {string[]} An array of built-in Node.js modules.
          */
         function getBuiltinModules() {
@@ -104,14 +115,16 @@ module.exports = {
 
                 // "var x = require('util');"
                 return DECL_REQUIRE;
-            } else if (allowCall &&
+            }
+            if (allowCall &&
                 initExpression.type === "CallExpression" &&
                 initExpression.callee.type === "CallExpression"
             ) {
 
                 // "var x = require('diagnose')('sub-module');"
                 return getDeclarationType(initExpression.callee);
-            } else if (initExpression.type === "MemberExpression") {
+            }
+            if (initExpression.type === "MemberExpression") {
 
                 // "var x = require('glob').Glob;"
                 return getDeclarationType(initExpression.object);
@@ -131,7 +144,8 @@ module.exports = {
 
                 // "var x = require('glob').Glob;"
                 return inferModuleType(initExpression.object);
-            } else if (initExpression.arguments.length === 0) {
+            }
+            if (initExpression.arguments.length === 0) {
 
                 // "var x = require();"
                 return REQ_COMPUTED;
@@ -149,7 +163,8 @@ module.exports = {
 
                 // "var fs = require('fs');"
                 return REQ_CORE;
-            } else if (/^\.{0,2}\//.test(arg.value)) {
+            }
+            if (/^\.{0,2}\//u.test(arg.value)) {
 
                 // "var utils = require('./utils');"
                 return REQ_FILE;
@@ -205,9 +220,15 @@ module.exports = {
             VariableDeclaration(node) {
 
                 if (isMixed(node.declarations)) {
-                    context.report({ node, message: "Do not mix 'require' and other declarations." });
+                    context.report({
+                        node,
+                        messageId: "noMixRequire"
+                    });
                 } else if (grouping && !isGrouped(node.declarations)) {
-                    context.report({ node, message: "Do not mix core, module, file and computed requires." });
+                    context.report({
+                        node,
+                        messageId: "noMixCoreModuleFileComputed"
+                    });
                 }
             }
         };

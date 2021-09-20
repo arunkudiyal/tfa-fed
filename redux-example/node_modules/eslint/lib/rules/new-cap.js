@@ -9,6 +9,8 @@
 // Requirements
 //------------------------------------------------------------------------------
 
+const astUtils = require("./utils/ast-utils");
+
 //------------------------------------------------------------------------------
 // Helpers
 //------------------------------------------------------------------------------
@@ -23,7 +25,8 @@ const CAPS_ALLOWED = [
     "Object",
     "RegExp",
     "String",
-    "Symbol"
+    "Symbol",
+    "BigInt"
 ];
 
 /**
@@ -74,10 +77,13 @@ function calculateCapIsNewExceptions(config) {
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "require constructor names to begin with a capital letter",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/new-cap"
         },
 
         schema: [
@@ -85,10 +91,12 @@ module.exports = {
                 type: "object",
                 properties: {
                     newIsCap: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: true
                     },
                     capIsNew: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: true
                     },
                     newIsCapExceptions: {
                         type: "array",
@@ -109,27 +117,32 @@ module.exports = {
                         type: "string"
                     },
                     properties: {
-                        type: "boolean"
+                        type: "boolean",
+                        default: true
                     }
                 },
                 additionalProperties: false
             }
-        ]
+        ],
+        messages: {
+            upper: "A function with a name starting with an uppercase letter should only be used as a constructor.",
+            lower: "A constructor name should not start with a lowercase letter."
+        }
     },
 
     create(context) {
 
-        const config = context.options[0] ? Object.assign({}, context.options[0]) : {};
+        const config = Object.assign({}, context.options[0]);
 
         config.newIsCap = config.newIsCap !== false;
         config.capIsNew = config.capIsNew !== false;
         const skipProperties = config.properties === false;
 
         const newIsCapExceptions = checkArray(config, "newIsCapExceptions", []).reduce(invert, {});
-        const newIsCapExceptionPattern = config.newIsCapExceptionPattern ? new RegExp(config.newIsCapExceptionPattern) : null;
+        const newIsCapExceptionPattern = config.newIsCapExceptionPattern ? new RegExp(config.newIsCapExceptionPattern, "u") : null;
 
         const capIsNewExceptions = calculateCapIsNewExceptions(config);
-        const capIsNewExceptionPattern = config.capIsNewExceptionPattern ? new RegExp(config.capIsNewExceptionPattern) : null;
+        const capIsNewExceptionPattern = config.capIsNewExceptionPattern ? new RegExp(config.capIsNewExceptionPattern, "u") : null;
 
         const listeners = {};
 
@@ -145,21 +158,9 @@ module.exports = {
          * @returns {string} name
          */
         function extractNameFromExpression(node) {
-
-            let name = "";
-
-            if (node.callee.type === "MemberExpression") {
-                const property = node.callee.property;
-
-                if (property.type === "Literal" && (typeof property.value === "string")) {
-                    name = property.value;
-                } else if (property.type === "Identifier" && !node.callee.computed) {
-                    name = property.name;
-                }
-            } else {
-                name = node.callee.name;
-            }
-            return name;
+            return node.callee.type === "Identifier"
+                ? node.callee.name
+                : astUtils.getStaticPropertyName(node.callee) || "";
         }
 
         /**
@@ -178,7 +179,8 @@ module.exports = {
 
                 // char has no uppercase variant, so it's non-alphabetic
                 return "non-alpha";
-            } else if (firstChar === firstCharLower) {
+            }
+            if (firstChar === firstCharLower) {
                 return "lower";
             }
             return "upper";
@@ -204,30 +206,32 @@ module.exports = {
                 return true;
             }
 
-            if (calleeName === "UTC" && node.callee.type === "MemberExpression") {
+            const callee = astUtils.skipChainExpression(node.callee);
+
+            if (calleeName === "UTC" && callee.type === "MemberExpression") {
 
                 // allow if callee is Date.UTC
-                return node.callee.object.type === "Identifier" &&
-                    node.callee.object.name === "Date";
+                return callee.object.type === "Identifier" &&
+                    callee.object.name === "Date";
             }
 
-            return skipProperties && node.callee.type === "MemberExpression";
+            return skipProperties && callee.type === "MemberExpression";
         }
 
         /**
-         * Reports the given message for the given node. The location will be the start of the property or the callee.
+         * Reports the given messageId for the given node. The location will be the start of the property or the callee.
          * @param {ASTNode} node CallExpression or NewExpression node.
-         * @param {string} message The message to report.
+         * @param {string} messageId The messageId to report.
          * @returns {void}
          */
-        function report(node, message) {
-            let callee = node.callee;
+        function report(node, messageId) {
+            let callee = astUtils.skipChainExpression(node.callee);
 
             if (callee.type === "MemberExpression") {
                 callee = callee.property;
             }
 
-            context.report({ node, loc: callee.loc.start, message });
+            context.report({ node, loc: callee.loc, messageId });
         }
 
         //--------------------------------------------------------------------------
@@ -244,7 +248,7 @@ module.exports = {
                     const isAllowed = capitalization !== "lower" || isCapAllowed(newIsCapExceptions, node, constructorName, newIsCapExceptionPattern);
 
                     if (!isAllowed) {
-                        report(node, "A constructor name should not start with a lowercase letter.");
+                        report(node, "lower");
                     }
                 }
             };
@@ -260,7 +264,7 @@ module.exports = {
                     const isAllowed = capitalization !== "upper" || isCapAllowed(capIsNewExceptions, node, calleeName, capIsNewExceptionPattern);
 
                     if (!isAllowed) {
-                        report(node, "A function with a name starting with an uppercase letter should only be used as a constructor.");
+                        report(node, "upper");
                     }
                 }
             };

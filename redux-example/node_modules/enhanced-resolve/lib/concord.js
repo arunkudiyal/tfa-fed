@@ -2,11 +2,13 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-var globToRegExp = require("./globToRegExp").globToRegExp;
+"use strict";
+
+const globToRegExp = require("./globToRegExp").globToRegExp;
 
 function parseType(type) {
-	var items = type.split("+");
-	var t = items.shift();
+	const items = type.split("+");
+	const t = items.shift();
 	return {
 		type: t === "*" ? null : t,
 		features: items
@@ -14,10 +16,10 @@ function parseType(type) {
 }
 
 function isTypeMatched(baseType, testedType) {
-	if(typeof baseType === "string") baseType = parseType(baseType);
-	if(typeof testedType === "string") testedType = parseType(testedType);
-	if(testedType.type && testedType.type !== baseType.type) return false;
-	return testedType.features.every(function(requiredFeature) {
+	if (typeof baseType === "string") baseType = parseType(baseType);
+	if (typeof testedType === "string") testedType = parseType(testedType);
+	if (testedType.type && testedType.type !== baseType.type) return false;
+	return testedType.features.every(requiredFeature => {
 		return baseType.features.indexOf(requiredFeature) >= 0;
 	});
 }
@@ -25,35 +27,40 @@ function isTypeMatched(baseType, testedType) {
 function isResourceTypeMatched(baseType, testedType) {
 	baseType = baseType.split("/");
 	testedType = testedType.split("/");
-	if(baseType.length !== testedType.length) return false;
-	for(var i = 0; i < baseType.length; i++) {
-		if(!isTypeMatched(baseType[i], testedType[i]))
-			return false;
+	if (baseType.length !== testedType.length) return false;
+	for (let i = 0; i < baseType.length; i++) {
+		if (!isTypeMatched(baseType[i], testedType[i])) return false;
 	}
 	return true;
 }
 
 function isResourceTypeSupported(context, type) {
-	return context.supportedResourceTypes && context.supportedResourceTypes.some(function(supportedType) {
-		return isResourceTypeMatched(supportedType, type);
-	});
+	return (
+		context.supportedResourceTypes &&
+		context.supportedResourceTypes.some(supportedType => {
+			return isResourceTypeMatched(supportedType, type);
+		})
+	);
 }
 
 function isEnvironment(context, env) {
-	return context.environments && context.environments.every(function(environment) {
-		return isTypeMatched(environment, env);
-	});
+	return (
+		context.environments &&
+		context.environments.every(environment => {
+			return isTypeMatched(environment, env);
+		})
+	);
 }
 
-var globCache = {};
+const globCache = {};
 
 function getGlobRegExp(glob) {
-	var regExp = globCache[glob] || (globCache[glob] = globToRegExp(glob));
+	const regExp = globCache[glob] || (globCache[glob] = globToRegExp(glob));
 	return regExp;
 }
 
 function matchGlob(glob, relativePath) {
-	var regExp = getGlobRegExp(glob);
+	const regExp = getGlobRegExp(glob);
 	return regExp.exec(relativePath);
 }
 
@@ -62,23 +69,23 @@ function isGlobMatched(glob, relativePath) {
 }
 
 function isConditionMatched(context, condition) {
-	var items = condition.split("|");
+	const items = condition.split("|");
 	return items.some(function testFn(item) {
 		item = item.trim();
-		var inverted = /^!/.test(item);
-		if(inverted) return !testFn(item.substr(1));
-		if(/^[a-z]+:/.test(item)) {
+		const inverted = /^!/.test(item);
+		if (inverted) return !testFn(item.substr(1));
+		if (/^[a-z]+:/.test(item)) {
 			// match named condition
-			var match = /^([a-z]+):\s*/.exec(item);
-			var value = item.substr(match[0].length);
-			var name = match[1];
-			switch(name) {
+			const match = /^([a-z]+):\s*/.exec(item);
+			const value = item.substr(match[0].length);
+			const name = match[1];
+			switch (name) {
 				case "referrer":
 					return isGlobMatched(value, context.referrer);
 				default:
 					return false;
 			}
-		} else if(item.indexOf("/") >= 0) {
+		} else if (item.indexOf("/") >= 0) {
 			// match supported type
 			return isResourceTypeSupported(context, item);
 		} else {
@@ -89,22 +96,22 @@ function isConditionMatched(context, condition) {
 }
 
 function isKeyMatched(context, key) {
-	while(true) { //eslint-disable-line
-		var match = /^\[([^\]]+)\]\s*/.exec(key);
-		if(!match) return key;
+	for (;;) {
+		const match = /^\[([^\]]+)\]\s*/.exec(key);
+		if (!match) return key;
 		key = key.substr(match[0].length);
-		var condition = match[1];
-		if(!isConditionMatched(context, condition)) {
+		const condition = match[1];
+		if (!isConditionMatched(context, condition)) {
 			return false;
 		}
 	}
 }
 
 function getField(context, configuration, field) {
-	var value;
-	Object.keys(configuration).forEach(function(key) {
-		var pureKey = isKeyMatched(context, key);
-		if(pureKey === field) {
+	let value;
+	Object.keys(configuration).forEach(key => {
+		const pureKey = isKeyMatched(context, key);
+		if (pureKey === field) {
 			value = configuration[key];
 		}
 	});
@@ -120,27 +127,29 @@ function getExtensions(context, configuration) {
 }
 
 function matchModule(context, configuration, request) {
-	var modulesField = getField(context, configuration, "modules");
-	if(!modulesField) return request;
-	var newRequest = request;
-	var keys = Object.keys(modulesField);
-	var iteration = 0;
-	for(var i = 0; i < keys.length; i++) {
-		var key = keys[i];
-		var pureKey = isKeyMatched(context, key);
-		var match = matchGlob(pureKey, newRequest);
-		if(match) {
-			var value = modulesField[key];
-			if(typeof value !== "string") {
+	const modulesField = getField(context, configuration, "modules");
+	if (!modulesField) return request;
+	let newRequest = request;
+	const keys = Object.keys(modulesField);
+	let iteration = 0;
+	let match;
+	let index;
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const pureKey = isKeyMatched(context, key);
+		match = matchGlob(pureKey, newRequest);
+		if (match) {
+			const value = modulesField[key];
+			if (typeof value !== "string") {
 				return value;
-			} else if(/^\(.+\)$/.test(pureKey)) {
+			} else if (/^\(.+\)$/.test(pureKey)) {
 				newRequest = newRequest.replace(getGlobRegExp(pureKey), value);
 			} else {
-				var index = 1;
+				index = 1;
 				newRequest = value.replace(/(\/?\*)?\*/g, replaceMatcher);
 			}
 			i = -1;
-			if(iteration++ > keys.length) {
+			if (iteration++ > keys.length) {
 				throw new Error("Request '" + request + "' matches recursively");
 			}
 		}
@@ -148,10 +157,11 @@ function matchModule(context, configuration, request) {
 	return newRequest;
 
 	function replaceMatcher(find) {
-		switch(find) {
-			case "/**":
-				var m = match[index++];
+		switch (find) {
+			case "/**": {
+				const m = match[index++];
 				return m ? "/" + m : "";
+			}
 			case "**":
 			case "*":
 				return match[index++];
@@ -160,15 +170,21 @@ function matchModule(context, configuration, request) {
 }
 
 function matchType(context, configuration, relativePath) {
-	var typesField = getField(context, configuration, "types");
-	if(!typesField) return undefined;
-	var type;
-	Object.keys(typesField).forEach(function(key) {
-		var pureKey = isKeyMatched(context, key);
-		if(isGlobMatched(pureKey, relativePath)) {
-			var value = typesField[key];
-			if(!type && /\/\*$/.test(value))
-				throw new Error("value ('" + value + "') of key '" + key + "' contains '*', but there is no previous value defined");
+	const typesField = getField(context, configuration, "types");
+	if (!typesField) return undefined;
+	let type;
+	Object.keys(typesField).forEach(key => {
+		const pureKey = isKeyMatched(context, key);
+		if (isGlobMatched(pureKey, relativePath)) {
+			const value = typesField[key];
+			if (!type && /\/\*$/.test(value))
+				throw new Error(
+					"value ('" +
+						value +
+						"') of key '" +
+						key +
+						"' contains '*', but there is no previous value defined"
+				);
 			type = value.replace(/\/\*$/, "/" + type);
 		}
 	});

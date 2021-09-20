@@ -8,8 +8,9 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const espree = require("espree"),
-    keywords = require("../util/keywords");
+const espree = require("espree");
+const astUtils = require("./utils/ast-utils");
+const keywords = require("./utils/keywords");
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -17,10 +18,13 @@ const espree = require("espree"),
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "require quotes around object literal property names",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/quote-props"
         },
 
         schema: {
@@ -63,7 +67,16 @@ module.exports = {
             ]
         },
 
-        fixable: "code"
+        fixable: "code",
+        messages: {
+            requireQuotesDueToReservedWord: "Properties should be quoted as '{{property}}' is a reserved word.",
+            inconsistentlyQuotedProperty: "Inconsistently quoted property '{{key}}' found.",
+            unnecessarilyQuotedProperty: "Unnecessarily quoted property '{{property}}' found.",
+            unquotedReservedProperty: "Unquoted reserved word '{{property}}' used as key.",
+            unquotedNumericProperty: "Unquoted number literal '{{property}}' used as key.",
+            unquotedPropertyFound: "Unquoted property '{{property}}' found.",
+            redundantQuoting: "Properties shouldn't be quoted as all quotes are redundant."
+        }
     },
 
     create(context) {
@@ -73,16 +86,12 @@ module.exports = {
             CHECK_UNNECESSARY = !context.options[1] || context.options[1].unnecessary !== false,
             NUMBERS = context.options[1] && context.options[1].numbers,
 
-            MESSAGE_UNNECESSARY = "Unnecessarily quoted property '{{property}}' found.",
-            MESSAGE_UNQUOTED = "Unquoted property '{{property}}' found.",
-            MESSAGE_NUMERIC = "Unquoted number literal '{{property}}' used as key.",
-            MESSAGE_RESERVED = "Unquoted reserved word '{{property}}' used as key.",
             sourceCode = context.getSourceCode();
 
 
         /**
          * Checks whether a certain string constitutes an ES3 token
-         * @param   {string} tokenStr - The string to be checked.
+         * @param   {string} tokenStr The string to be checked.
          * @returns {boolean} `true` if it is an ES3 token.
          */
         function isKeyword(tokenStr) {
@@ -104,19 +113,19 @@ module.exports = {
         }
 
         /**
-        * Returns a string representation of a property node with quotes removed
-        * @param {ASTNode} key Key AST Node, which may or may not be quoted
-        * @returns {string} A replacement string for this property
-        */
+         * Returns a string representation of a property node with quotes removed
+         * @param {ASTNode} key Key AST Node, which may or may not be quoted
+         * @returns {string} A replacement string for this property
+         */
         function getUnquotedKey(key) {
             return key.type === "Identifier" ? key.name : key.value;
         }
 
         /**
-        * Returns a string representation of a property node with quotes added
-        * @param {ASTNode} key Key AST Node, which may or may not be quoted
-        * @returns {string} A replacement string for this property
-        */
+         * Returns a string representation of a property node with quotes added
+         * @param {ASTNode} key Key AST Node, which may or may not be quoted
+         * @returns {string} A replacement string for this property
+         */
         function getQuotedKey(key) {
             if (key.type === "Literal" && typeof key.value === "string") {
 
@@ -135,16 +144,17 @@ module.exports = {
          */
         function checkUnnecessaryQuotes(node) {
             const key = node.key;
-            let tokens;
 
             if (node.method || node.computed || node.shorthand) {
                 return;
             }
 
             if (key.type === "Literal" && typeof key.value === "string") {
+                let tokens;
+
                 try {
                     tokens = espree.tokenize(key.value);
-                } catch (e) {
+                } catch {
                     return;
                 }
 
@@ -161,7 +171,7 @@ module.exports = {
                 if (CHECK_UNNECESSARY && areQuotesRedundant(key.value, tokens, NUMBERS)) {
                     context.report({
                         node,
-                        message: MESSAGE_UNNECESSARY,
+                        messageId: "unnecessarilyQuotedProperty",
                         data: { property: key.value },
                         fix: fixer => fixer.replaceText(key, getUnquotedKey(key))
                     });
@@ -169,14 +179,14 @@ module.exports = {
             } else if (KEYWORDS && key.type === "Identifier" && isKeyword(key.name)) {
                 context.report({
                     node,
-                    message: MESSAGE_RESERVED,
+                    messageId: "unquotedReservedProperty",
                     data: { property: key.name },
                     fix: fixer => fixer.replaceText(key, getQuotedKey(key))
                 });
-            } else if (NUMBERS && key.type === "Literal" && typeof key.value === "number") {
+            } else if (NUMBERS && key.type === "Literal" && astUtils.isNumericLiteral(key)) {
                 context.report({
                     node,
-                    message: MESSAGE_NUMERIC,
+                    messageId: "unquotedNumericProperty",
                     data: { property: key.value },
                     fix: fixer => fixer.replaceText(key, getQuotedKey(key))
                 });
@@ -194,7 +204,7 @@ module.exports = {
             if (!node.method && !node.computed && !node.shorthand && !(key.type === "Literal" && typeof key.value === "string")) {
                 context.report({
                     node,
-                    message: MESSAGE_UNQUOTED,
+                    messageId: "unquotedPropertyFound",
                     data: { property: key.name || key.value },
                     fix: fixer => fixer.replaceText(key, getQuotedKey(key))
                 });
@@ -215,7 +225,6 @@ module.exports = {
 
             node.properties.forEach(property => {
                 const key = property.key;
-                let tokens;
 
                 if (!key || property.method || property.computed || property.shorthand) {
                     return;
@@ -226,9 +235,11 @@ module.exports = {
                     quotedProps.push(property);
 
                     if (checkQuotesRedundancy) {
+                        let tokens;
+
                         try {
                             tokens = espree.tokenize(key.value);
-                        } catch (e) {
+                        } catch {
                             necessaryQuotes = true;
                             return;
                         }
@@ -248,7 +259,7 @@ module.exports = {
                 quotedProps.forEach(property => {
                     context.report({
                         node: property,
-                        message: "Properties shouldn't be quoted as all quotes are redundant.",
+                        messageId: "redundantQuoting",
                         fix: fixer => fixer.replaceText(property.key, getUnquotedKey(property.key))
                     });
                 });
@@ -256,7 +267,7 @@ module.exports = {
                 unquotedProps.forEach(property => {
                     context.report({
                         node: property,
-                        message: "Properties should be quoted as '{{property}}' is a reserved word.",
+                        messageId: "requireQuotesDueToReservedWord",
                         data: { property: keywordKeyName },
                         fix: fixer => fixer.replaceText(property.key, getQuotedKey(property.key))
                     });
@@ -265,7 +276,7 @@ module.exports = {
                 unquotedProps.forEach(property => {
                     context.report({
                         node: property,
-                        message: "Inconsistently quoted property '{{key}}' found.",
+                        messageId: "inconsistentlyQuotedProperty",
                         data: { key: property.key.name || property.key.value },
                         fix: fixer => fixer.replaceText(property.key, getQuotedKey(property.key))
                     });

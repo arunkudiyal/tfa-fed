@@ -10,13 +10,20 @@
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "disallow negated conditions",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-negated-condition"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            unexpectedNegated: "Unexpected negated condition."
+        }
     },
 
     create(context) {
@@ -69,12 +76,18 @@ module.exports = {
                 }
 
                 if (isNegatedIf(node)) {
-                    context.report({ node, message: "Unexpected negated condition." });
+                    context.report({
+                        node,
+                        messageId: "unexpectedNegated"
+                    });
                 }
             },
             ConditionalExpression(node) {
                 if (isNegatedIf(node)) {
-                    context.report({ node, message: "Unexpected negated condition." });
+                    context.report({
+                        node,
+                        messageId: "unexpectedNegated"
+                    });
                 }
             }
         };

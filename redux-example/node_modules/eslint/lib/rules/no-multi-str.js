@@ -9,7 +9,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const astUtils = require("../ast-utils");
+const astUtils = require("./utils/ast-utils");
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -17,13 +17,20 @@ const astUtils = require("../ast-utils");
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "disallow multiline strings",
             category: "Best Practices",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-multi-str"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            multilineString: "Multiline support is limited to browsers supporting ES5 only."
+        }
     },
 
     create(context) {
@@ -46,7 +53,10 @@ module.exports = {
 
             Literal(node) {
                 if (astUtils.LINEBREAK_MATCHER.test(node.raw) && !isJSXElement(node.parent)) {
-                    context.report({ node, message: "Multiline support is limited to browsers supporting ES5 only." });
+                    context.report({
+                        node,
+                        messageId: "multilineString"
+                    });
                 }
             }
         };

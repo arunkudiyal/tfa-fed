@@ -1,5 +1,5 @@
 /**
- * @fileoverview Rule to disallow if as the only statmenet in an else block
+ * @fileoverview Rule to disallow if as the only statement in an else block
  * @author Brandon Mills
  */
 "use strict";
@@ -10,15 +10,21 @@
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "disallow `if` statements as the only statement in `else` blocks",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-lonely-if"
         },
 
         schema: [],
+        fixable: "code",
 
-        fixable: "code"
+        messages: {
+            unexpectedLonelyIf: "Unexpected if as the only statement in an else block."
+        }
     },
 
     create(context) {
@@ -36,7 +42,7 @@ module.exports = {
                         parent === grandparent.alternate) {
                     context.report({
                         node,
-                        message: "Unexpected if as the only statement in an else block.",
+                        messageId: "unexpectedLonelyIf",
                         fix(fixer) {
                             const openingElseCurly = sourceCode.getFirstToken(parent);
                             const closingElseCurly = sourceCode.getLastToken(parent);
@@ -45,7 +51,8 @@ module.exports = {
                             const lastIfToken = sourceCode.getLastToken(node.consequent);
                             const sourceText = sourceCode.getText();
 
-                            if (sourceText.slice(openingElseCurly.range[1], node.range[0]).trim() || sourceText.slice(node.range[1], closingElseCurly.range[0]).trim()) {
+                            if (sourceText.slice(openingElseCurly.range[1],
+                                node.range[0]).trim() || sourceText.slice(node.range[1], closingElseCurly.range[0]).trim()) {
 
                                 // Don't fix if there are any non-whitespace characters interfering (e.g. comments)
                                 return null;
@@ -55,7 +62,7 @@ module.exports = {
                                 node.consequent.type !== "BlockStatement" && lastIfToken.value !== ";" && tokenAfterElseBlock &&
                                 (
                                     node.consequent.loc.end.line === tokenAfterElseBlock.loc.start.line ||
-                                    /^[([/+`-]/.test(tokenAfterElseBlock.value) ||
+                                    /^[([/+`-]/u.test(tokenAfterElseBlock.value) ||
                                     lastIfToken.value === "++" ||
                                     lastIfToken.value === "--"
                                 )

@@ -9,7 +9,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const astUtils = require("../ast-utils");
+const astUtils = require("./utils/ast-utils");
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -17,10 +17,13 @@ const astUtils = require("../ast-utils");
 
 module.exports = {
     meta: {
+        type: "layout",
+
         docs: {
             description: "enforce consistent linebreak style for operators",
             category: "Stylistic Issues",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/operator-linebreak"
         },
 
         schema: [
@@ -32,11 +35,8 @@ module.exports = {
                 properties: {
                     overrides: {
                         type: "object",
-                        properties: {
-                            anyOf: {
-                                type: "string",
-                                enum: ["after", "before", "none", "ignore"]
-                            }
+                        additionalProperties: {
+                            enum: ["after", "before", "none", "ignore"]
                         }
                     }
                 },
@@ -44,7 +44,14 @@ module.exports = {
             }
         ],
 
-        fixable: "code"
+        fixable: "code",
+
+        messages: {
+            operatorAtBeginning: "'{{operator}}' should be placed at the beginning of the line.",
+            operatorAtEnd: "'{{operator}}' should be placed at the end of the line.",
+            badLinebreak: "Bad line breaking before and after '{{operator}}'.",
+            noLinebreak: "There should be no line break before or after '{{operator}}'."
+        }
     },
 
     create(context) {
@@ -69,11 +76,11 @@ module.exports = {
         //--------------------------------------------------------------------------
 
         /**
-        * Gets a fixer function to fix rule issues
-        * @param {Token} operatorToken The operator token of an expression
-        * @param {string} desiredStyle The style for the rule. One of 'before', 'after', 'none'
-        * @returns {Function} A fixer function
-        */
+         * Gets a fixer function to fix rule issues
+         * @param {Token} operatorToken The operator token of an expression
+         * @param {string} desiredStyle The style for the rule. One of 'before', 'after', 'none'
+         * @returns {Function} A fixer function
+         */
         function getFixer(operatorToken, desiredStyle) {
             return fixer => {
                 const tokenBefore = sourceCode.getTokenBefore(operatorToken);
@@ -87,7 +94,9 @@ module.exports = {
                 if (hasLinebreakBefore !== hasLinebreakAfter && desiredStyle !== "none") {
 
                     // If there is a comment before and after the operator, don't do a fix.
-                    if (sourceCode.getTokenBefore(operatorToken, { includeComments: true }) !== tokenBefore && sourceCode.getTokenAfter(operatorToken, { includeComments: true }) !== tokenAfter) {
+                    if (sourceCode.getTokenBefore(operatorToken, { includeComments: true }) !== tokenBefore &&
+                        sourceCode.getTokenAfter(operatorToken, { includeComments: true }) !== tokenAfter) {
+
                         return null;
                     }
 
@@ -133,11 +142,13 @@ module.exports = {
          */
         function validateNode(node, leftSide) {
 
-            // When the left part of a binary expression is a single expression wrapped in
-            // parentheses (ex: `(a) + b`), leftToken will be the last token of the expression
-            // and operatorToken will be the closing parenthesis.
-            // The leftToken should be the last closing parenthesis, and the operatorToken
-            // should be the token right after that.
+            /*
+             * When the left part of a binary expression is a single expression wrapped in
+             * parentheses (ex: `(a) + b`), leftToken will be the last token of the expression
+             * and operatorToken will be the closing parenthesis.
+             * The leftToken should be the last closing parenthesis, and the operatorToken
+             * should be the token right after that.
+             */
             const operatorToken = sourceCode.getTokenAfter(leftSide, astUtils.isNotClosingParenToken);
             const leftToken = sourceCode.getTokenBefore(operatorToken);
             const rightToken = sourceCode.getTokenAfter(operatorToken);
@@ -158,11 +169,8 @@ module.exports = {
                 // lone operator
                 context.report({
                     node,
-                    loc: {
-                        line: operatorToken.loc.end.line,
-                        column: operatorToken.loc.end.column
-                    },
-                    message: "Bad line breaking before and after '{{operator}}'.",
+                    loc: operatorToken.loc,
+                    messageId: "badLinebreak",
                     data: {
                         operator
                     },
@@ -173,11 +181,8 @@ module.exports = {
 
                 context.report({
                     node,
-                    loc: {
-                        line: operatorToken.loc.end.line,
-                        column: operatorToken.loc.end.column
-                    },
-                    message: "'{{operator}}' should be placed at the beginning of the line.",
+                    loc: operatorToken.loc,
+                    messageId: "operatorAtBeginning",
                     data: {
                         operator
                     },
@@ -188,11 +193,8 @@ module.exports = {
 
                 context.report({
                     node,
-                    loc: {
-                        line: operatorToken.loc.end.line,
-                        column: operatorToken.loc.end.column
-                    },
-                    message: "'{{operator}}' should be placed at the end of the line.",
+                    loc: operatorToken.loc,
+                    messageId: "operatorAtEnd",
                     data: {
                         operator
                     },
@@ -203,11 +205,8 @@ module.exports = {
 
                 context.report({
                     node,
-                    loc: {
-                        line: operatorToken.loc.end.line,
-                        column: operatorToken.loc.end.column
-                    },
-                    message: "There should be no line break before or after '{{operator}}'.",
+                    loc: operatorToken.loc,
+                    messageId: "noLinebreak",
                     data: {
                         operator
                     },

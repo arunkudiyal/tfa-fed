@@ -12,6 +12,10 @@ function resolveMemberExpressions(object = {}, property = {}) {
 export default function elementType(node = {}) {
   const { name } = node;
 
+  if (node.type === 'JSXOpeningFragment') {
+    return '<>';
+  }
+
   if (!name) {
     throw new Error('The argument provided is not a JSXElement node.');
   }
@@ -19,7 +23,9 @@ export default function elementType(node = {}) {
   if (name.type === 'JSXMemberExpression') {
     const { object = {}, property = {} } = name;
     return resolveMemberExpressions(object, property);
-  } else if (name.type === 'JSXNamespacedName') {
+  }
+
+  if (name.type === 'JSXNamespacedName') {
     return `${name.namespace.name}:${name.name.name}`;
   }
 

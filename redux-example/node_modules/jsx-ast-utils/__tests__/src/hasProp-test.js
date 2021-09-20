@@ -1,21 +1,24 @@
 /* eslint-env mocha */
 import assert from 'assert';
-import { getOpeningElement } from '../helper';
+import { getOpeningElement, setParserName } from '../helper';
 import hasProp, { hasAnyProp, hasEveryProp } from '../../src/hasProp';
 
 describe('hasProp', () => {
+  beforeEach(() => {
+    setParserName('babel');
+  });
   it('should export a function', () => {
     const expected = 'function';
     const actual = typeof hasProp;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if no arguments are provided', () => {
     const expected = false;
     const actual = hasProp();
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is absent', () => {
@@ -27,7 +30,7 @@ describe('hasProp', () => {
     const expected = false;
     const actual = hasProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the prop exists', () => {
@@ -39,7 +42,7 @@ describe('hasProp', () => {
     const expected = true;
     const actual = hasProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the prop may exist in spread loose mode', () => {
@@ -54,7 +57,7 @@ describe('hasProp', () => {
     const expected = true;
     const actual = hasProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is considered absent in case-sensitive mode', () => {
@@ -69,7 +72,7 @@ describe('hasProp', () => {
     const expected = false;
     const actual = hasProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 });
 
@@ -78,14 +81,14 @@ describe('hasAnyProp tests', () => {
     const expected = 'function';
     const actual = typeof hasAnyProp;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if no arguments are provided', () => {
     const expected = false;
     const actual = hasAnyProp();
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is absent', () => {
@@ -97,7 +100,7 @@ describe('hasAnyProp tests', () => {
     const expected = false;
     const actual = hasAnyProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are absent in array', () => {
@@ -109,7 +112,7 @@ describe('hasAnyProp tests', () => {
     const expected = false;
     const actual = hasAnyProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are absent in space delimited string', () => {
@@ -121,7 +124,7 @@ describe('hasAnyProp tests', () => {
     const expected = false;
     const actual = hasAnyProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the prop exists', () => {
@@ -133,7 +136,7 @@ describe('hasAnyProp tests', () => {
     const expected = true;
     const actual = hasAnyProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if any prop exists in array', () => {
@@ -145,7 +148,7 @@ describe('hasAnyProp tests', () => {
     const expected = true;
     const actual = hasAnyProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if any prop exists in space delimited string', () => {
@@ -157,7 +160,7 @@ describe('hasAnyProp tests', () => {
     const expected = true;
     const actual = hasAnyProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the prop may exist in spread loose mode', () => {
@@ -172,7 +175,7 @@ describe('hasAnyProp tests', () => {
     const expected = true;
     const actual = hasAnyProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if any prop may exist in spread loose mode', () => {
@@ -187,7 +190,7 @@ describe('hasAnyProp tests', () => {
     const expected = true;
     const actual = hasAnyProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is considered absent in case-sensitive mode', () => {
@@ -202,7 +205,7 @@ describe('hasAnyProp tests', () => {
     const expected = false;
     const actual = hasAnyProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are considered absent in case-sensitive mode', () => {
@@ -217,7 +220,7 @@ describe('hasAnyProp tests', () => {
     const expected = false;
     const actual = hasAnyProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 });
 
@@ -226,14 +229,14 @@ describe('hasEveryProp tests', () => {
     const expected = 'function';
     const actual = typeof hasEveryProp;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if no arguments are provided', () => {
     const expected = true;
     const actual = hasEveryProp();
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is absent', () => {
@@ -245,7 +248,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if any props are absent in array', () => {
@@ -257,7 +260,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are absent in array', () => {
@@ -269,7 +272,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if any props are absent in space delimited string', () => {
@@ -281,7 +284,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are absent in space delimited string', () => {
@@ -293,7 +296,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, propsToCheck);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the prop exists', () => {
@@ -305,7 +308,7 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if all props exist in array', () => {
@@ -317,7 +320,7 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if all props exist in space delimited string', () => {
@@ -329,7 +332,7 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if the props may exist in spread loose mode', () => {
@@ -344,7 +347,7 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if all props may exist in spread loose mode', () => {
@@ -359,7 +362,7 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if the prop is considered absent in case-sensitive mode', () => {
@@ -374,7 +377,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return false if all props are considered absent in case-sensitive mode', () => {
@@ -389,7 +392,7 @@ describe('hasEveryProp tests', () => {
     const expected = false;
     const actual = hasEveryProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 
   it('should return true if all props are considered present in case-sensitive mode', () => {
@@ -404,6 +407,6 @@ describe('hasEveryProp tests', () => {
     const expected = true;
     const actual = hasEveryProp(props, prop, options);
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
   });
 });

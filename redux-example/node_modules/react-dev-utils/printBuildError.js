@@ -1,10 +1,8 @@
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -15,11 +13,11 @@ module.exports = function printBuildError(err) {
   const message = err != null && err.message;
   const stack = err != null && err.stack;
 
-  // Add more helpful message for UglifyJs error
+  // Add more helpful message for Terser error
   if (
     stack &&
     typeof message === 'string' &&
-    message.indexOf('from UglifyJs') !== -1
+    message.indexOf('from Terser') !== -1
   ) {
     try {
       const matched = /(.+)\[(.+):(.+),(.+)\]\[.+\]/.exec(stack);
@@ -39,7 +37,7 @@ module.exports = function printBuildError(err) {
     } catch (ignored) {
       console.log('Failed to minify the bundle.', err);
     }
-    console.log('Read more here: http://bit.ly/2tRViJ9');
+    console.log('Read more here: https://cra.link/failed-to-minify');
   } else {
     console.log((message || err) + '\n');
   }

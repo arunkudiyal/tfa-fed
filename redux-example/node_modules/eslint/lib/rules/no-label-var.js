@@ -9,7 +9,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const astUtils = require("../ast-utils");
+const astUtils = require("./utils/ast-utils");
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -17,13 +17,20 @@ const astUtils = require("../ast-utils");
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "disallow labels that share a name with a variable",
             category: "Variables",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-label-var"
         },
 
-        schema: []
+        schema: [],
+
+        messages: {
+            identifierClashWithLabel: "Found identifier with same name as label."
+        }
     },
 
     create(context) {
@@ -54,10 +61,15 @@ module.exports = {
                 // Fetch the innermost scope.
                 const scope = context.getScope();
 
-                // Recursively find the identifier walking up the scope, starting
-                // with the innermost scope.
+                /*
+                 * Recursively find the identifier walking up the scope, starting
+                 * with the innermost scope.
+                 */
                 if (findIdentifier(scope, node.label.name)) {
-                    context.report({ node, message: "Found identifier with same name as label." });
+                    context.report({
+                        node,
+                        messageId: "identifierClashWithLabel"
+                    });
                 }
             }
 

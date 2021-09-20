@@ -8,27 +8,17 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-const astUtils = require("../ast-utils"),
-    FixTracker = require("../util/fix-tracker");
+const astUtils = require("./utils/ast-utils"),
+    FixTracker = require("./utils/fix-tracker");
 
 //------------------------------------------------------------------------------
 // Helpers
 //------------------------------------------------------------------------------
 
 /**
- * Adds all elements of 2nd argument into 1st argument.
- *
- * @param {Array} array - The destination array to add.
- * @param {Array} elements - The source array to add.
- * @returns {void}
- */
-const pushAll = Function.apply.bind(Array.prototype.push);
-
-/**
  * Removes the given element from the array.
- *
- * @param {Array} array - The source array to remove.
- * @param {any} element - The target item to remove.
+ * @param {Array} array The source array to remove.
+ * @param {any} element The target item to remove.
  * @returns {void}
  */
 function remove(array, element) {
@@ -41,9 +31,8 @@ function remove(array, element) {
 
 /**
  * Checks whether it can remove the given return statement or not.
- *
- * @param {ASTNode} node - The return statement node to check.
- * @returns {boolean} `true` if the node is removeable.
+ * @param {ASTNode} node The return statement node to check.
+ * @returns {boolean} `true` if the node is removable.
  */
 function isRemovable(node) {
     return astUtils.STATEMENT_LIST_PARENTS.has(node.parent.type);
@@ -51,17 +40,18 @@ function isRemovable(node) {
 
 /**
  * Checks whether the given return statement is in a `finally` block or not.
- *
- * @param {ASTNode} node - The return statement node to check.
+ * @param {ASTNode} node The return statement node to check.
  * @returns {boolean} `true` if the node is in a `finally` block.
  */
 function isInFinally(node) {
-    while (node && node.parent && !astUtils.isFunction(node)) {
-        if (node.parent.type === "TryStatement" && node.parent.finalizer === node) {
+    for (
+        let currentNode = node;
+        currentNode && currentNode.parent && !astUtils.isFunction(currentNode);
+        currentNode = currentNode.parent
+    ) {
+        if (currentNode.parent.type === "TryStatement" && currentNode.parent.finalizer === currentNode) {
             return true;
         }
-
-        node = node.parent;
     }
 
     return false;
@@ -73,24 +63,32 @@ function isInFinally(node) {
 
 module.exports = {
     meta: {
+        type: "suggestion",
+
         docs: {
             description: "disallow redundant return statements",
             category: "Best Practices",
-            recommended: false
+            recommended: false,
+            url: "https://eslint.org/docs/rules/no-useless-return"
         },
+
         fixable: "code",
-        schema: []
+        schema: [],
+
+        messages: {
+            unnecessaryReturn: "Unnecessary return statement."
+        }
     },
 
     create(context) {
         const segmentInfoMap = new WeakMap();
         const usedUnreachableSegments = new WeakSet();
+        const sourceCode = context.getSourceCode();
         let scopeInfo = null;
 
         /**
          * Checks whether the given segment is terminated by a return statement or not.
-         *
-         * @param {CodePathSegment} segment - The segment to check.
+         * @param {CodePathSegment} segment The segment to check.
          * @returns {boolean} `true` if the segment is terminated by a return statement, or if it's still a part of unreachable.
          */
         function isReturned(segment) {
@@ -112,16 +110,14 @@ module.exports = {
          *
          * This behavior would simulate code paths for the case that the return
          * statement does not exist.
-         *
-         * @param {ASTNode[]} uselessReturns - The collected return statements.
-         * @param {CodePathSegment[]} prevSegments - The previous segments to traverse.
-         * @param {WeakSet<CodePathSegment>} [traversedSegments] A set of segments that have already been traversed in this call
+         * @param {ASTNode[]} uselessReturns The collected return statements.
+         * @param {CodePathSegment[]} prevSegments The previous segments to traverse.
+         * @param {WeakSet<CodePathSegment>} [providedTraversedSegments] A set of segments that have already been traversed in this call
          * @returns {ASTNode[]} `uselessReturns`.
          */
-        function getUselessReturns(uselessReturns, prevSegments, traversedSegments) {
-            if (!traversedSegments) {
-                traversedSegments = new WeakSet();
-            }
+        function getUselessReturns(uselessReturns, prevSegments, providedTraversedSegments) {
+            const traversedSegments = providedTraversedSegments || new WeakSet();
+
             for (const segment of prevSegments) {
                 if (!segment.reachable) {
                     if (!traversedSegments.has(segment)) {
@@ -135,7 +131,7 @@ module.exports = {
                     continue;
                 }
 
-                pushAll(uselessReturns, segmentInfoMap.get(segment).uselessReturns);
+                uselessReturns.push(...segmentInfoMap.get(segment).uselessReturns);
             }
 
             return uselessReturns;
@@ -155,8 +151,7 @@ module.exports = {
          *
          * This behavior would simulate code paths for the case that the return
          * statement does not exist.
-         *
-         * @param {CodePathSegment} segment - The segment to get return statements.
+         * @param {CodePathSegment} segment The segment to get return statements.
          * @returns {void}
          */
         function markReturnStatementsOnSegmentAsUsed(segment) {
@@ -187,7 +182,6 @@ module.exports = {
          * - FunctionDeclarations are always executed whether it's returned or not.
          * - BlockStatements do nothing.
          * - BreakStatements go the next merely.
-         *
          * @returns {void}
          */
         function markReturnStatementsOnCurrentSegmentsAsUsed() {
@@ -218,15 +212,17 @@ module.exports = {
                     context.report({
                         node,
                         loc: node.loc,
-                        message: "Unnecessary return statement.",
+                        messageId: "unnecessaryReturn",
                         fix(fixer) {
-                            if (isRemovable(node)) {
+                            if (isRemovable(node) && !sourceCode.getCommentsInside(node).length) {
 
-                                // Extend the replacement range to include the
-                                // entire function to avoid conflicting with
-                                // no-else-return.
-                                // https://github.com/eslint/eslint/issues/8026
-                                return new FixTracker(fixer, context.getSourceCode())
+                                /*
+                                 * Extend the replacement range to include the
+                                 * entire function to avoid conflicting with
+                                 * no-else-return.
+                                 * https://github.com/eslint/eslint/issues/8026
+                                 */
+                                return new FixTracker(fixer, sourceCode)
                                     .retainEnclosingFunction(node)
                                     .remove(node);
                             }
@@ -238,8 +234,10 @@ module.exports = {
                 scopeInfo = scopeInfo.upper;
             },
 
-            // Initializes segments.
-            // NOTE: This event is notified for only reachable segments.
+            /*
+             * Initializes segments.
+             * NOTE: This event is notified for only reachable segments.
+             */
             onCodePathSegmentStart(segment) {
                 const info = {
                     uselessReturns: getUselessReturns([], segment.allPrevSegments),
@@ -255,7 +253,14 @@ module.exports = {
                 if (node.argument) {
                     markReturnStatementsOnCurrentSegmentsAsUsed();
                 }
-                if (node.argument || astUtils.isInLoop(node) || isInFinally(node)) {
+                if (
+                    node.argument ||
+                    astUtils.isInLoop(node) ||
+                    isInFinally(node) ||
+
+                    // Ignore `return` statements in unreachable places (https://github.com/eslint/eslint/issues/11647).
+                    !scopeInfo.codePath.currentSegments.some(s => s.reachable)
+                ) {
                     return;
                 }
 
@@ -270,8 +275,10 @@ module.exports = {
                 scopeInfo.uselessReturns.push(node);
             },
 
-            // Registers for all statement nodes except FunctionDeclaration, BlockStatement, BreakStatement.
-            // Removes return statements of the current segments from the useless return statement list.
+            /*
+             * Registers for all statement nodes except FunctionDeclaration, BlockStatement, BreakStatement.
+             * Removes return statements of the current segments from the useless return statement list.
+             */
             ClassDeclaration: markReturnStatementsOnCurrentSegmentsAsUsed,
             ContinueStatement: markReturnStatementsOnCurrentSegmentsAsUsed,
             DebuggerStatement: markReturnStatementsOnCurrentSegmentsAsUsed,

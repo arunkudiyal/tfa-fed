@@ -23,6 +23,10 @@ function elementType() {
   var name = node.name;
 
 
+  if (node.type === 'JSXOpeningFragment') {
+    return '<>';
+  }
+
   if (!name) {
     throw new Error('The argument provided is not a JSXElement node.');
   }
@@ -34,7 +38,9 @@ function elementType() {
         property = _name$property === undefined ? {} : _name$property;
 
     return resolveMemberExpressions(object, property);
-  } else if (name.type === 'JSXNamespacedName') {
+  }
+
+  if (name.type === 'JSXNamespacedName') {
     return name.namespace.name + ':' + name.name.name;
   }
 
