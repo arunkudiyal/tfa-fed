@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()         // router --> get, post, patch, delete
 const mongoose = require('mongoose')
+const { re } = require('semver')
 
 const Product = require('../model/product')
 
@@ -51,11 +52,25 @@ router.get('/:productId', (req, res, next) => {
         })
 })
 
-router.patch('/', (req, res, next) => {
-    res.status(200)
-    res.json({
-        message: 'Handling PATCH requests to /products'
+router.patch('/:productId', (req, res, next) => {
+    const id = req.params.productId
+
+    const updatedProduct = new Product({
+        _id: id,
+        name: req.body.name,
+        price: req.body.price
     })
+
+    Product.findByIdAndUpdate(id, updatedProduct)
+        .exec()
+        .then(doc => {
+            console.log(updatedProduct)
+            res.status(200).json(updatedProduct)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json(err)
+        })
 })
 
 router.delete('/:productId', (req, res, next) => { 
